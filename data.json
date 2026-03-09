@@ -1,0 +1,479 @@
+{
+  "paradas": [
+    { "id": 1, "nome": "Terminal Rodoviário", "cidade": "Registro" },
+    { "id": 2, "nome": "Terminal Rodoviário", "cidade": "Jacupiranga" },
+    { "id": 3, "nome": "Terminal Rodoviário", "cidade": "Cajati" },
+    { "id": 4, "nome": "Rodoviária", "cidade": "Eldorado" },
+    { "id": 5, "nome": "Rodoviária", "cidade": "Sete Barras" },
+    { "id": 6, "nome": "Rodoviária", "cidade": "Iguape" },
+    { "id": 7, "nome": "Terminal", "cidade": "Pariquera-Açu" },
+    { "id": 8, "nome": "Rodoviária", "cidade": "Miracatu" },
+    { "id": 9, "nome": "Terminal", "cidade": "Juquiá" },
+    { "id": 10, "nome": "Bairro Ponte Moreira", "cidade": "Ponte Moreira" },
+    { "id": 11, "nome": "Ponto Iporanga", "cidade": "Iporanga" },
+    { "id": 12, "nome": "Ponto Itapeuna", "cidade": "Itapeuna" }
+  ],
+  "linhas": [
+    {
+      "id": 1,
+      "codigo": "RC-01",
+      "nome": "Registro × Cajati",
+      "slug": "registro-cajati",
+      "descricao": "Linha ligando Registro, Jacupiranga e Cajati. Baseada na tabela vigente a partir de 02/02/2026.",
+      "ativa": true,
+      "paradas": [
+        { "parada_id": 1, "ordem": 1, "tempo_minutos": 0 },
+        { "parada_id": 10, "ordem": 2, "tempo_minutos": 15 },
+        { "parada_id": 2, "ordem": 3, "tempo_minutos": 30 },
+        { "parada_id": 3, "ordem": 4, "tempo_minutos": 50 }
+      ],
+      "horarios": [
+        { "id": 100, "hora_saida": "06:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 101, "hora_saida": "06:30", "tipo": "UTIL", "observacao": "" },
+        { "id": 102, "hora_saida": "06:45", "tipo": "UTIL", "observacao": "" },
+        { "id": 103, "hora_saida": "06:55", "tipo": "UTIL", "observacao": "" },
+        { "id": 104, "hora_saida": "08:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 105, "hora_saida": "08:15", "tipo": "UTIL", "observacao": "" },
+        { "id": 106, "hora_saida": "10:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 107, "hora_saida": "11:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 108, "hora_saida": "12:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 109, "hora_saida": "12:45", "tipo": "UTIL", "observacao": "" },
+        { "id": 110, "hora_saida": "13:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 111, "hora_saida": "14:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 112, "hora_saida": "15:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 113, "hora_saida": "15:30", "tipo": "UTIL", "observacao": "" },
+        { "id": 114, "hora_saida": "16:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 115, "hora_saida": "16:30", "tipo": "UTIL", "observacao": "" },
+        { "id": 116, "hora_saida": "17:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 117, "hora_saida": "17:20", "tipo": "UTIL", "observacao": "" },
+        { "id": 118, "hora_saida": "17:45", "tipo": "UTIL", "observacao": "" },
+        { "id": 119, "hora_saida": "18:15", "tipo": "UTIL", "observacao": "" },
+        { "id": 120, "hora_saida": "19:15", "tipo": "UTIL", "observacao": "" },
+        { "id": 121, "hora_saida": "20:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 122, "hora_saida": "22:00", "tipo": "UTIL", "observacao": "Via Orquidário. Não passa Rodoviária de Registro" },
+        { "id": 123, "hora_saida": "22:20", "tipo": "UTIL", "observacao": "Segunda a Quinta. Via Orquidário. Não passa Rodoviária de Registro" },
+        { "id": 124, "hora_saida": "23:20", "tipo": "UTIL", "observacao": "" },
+
+        { "id": 125, "hora_saida": "06:00", "tipo": "SABADO", "observacao": "" },
+        { "id": 126, "hora_saida": "06:30", "tipo": "SABADO", "observacao": "" },
+        { "id": 127, "hora_saida": "08:00", "tipo": "SABADO", "observacao": "" },
+        { "id": 128, "hora_saida": "10:00", "tipo": "SABADO", "observacao": "" },
+        { "id": 129, "hora_saida": "12:00", "tipo": "SABADO", "observacao": "" },
+        { "id": 130, "hora_saida": "13:00", "tipo": "SABADO", "observacao": "" },
+        { "id": 131, "hora_saida": "14:15", "tipo": "SABADO", "observacao": "" },
+        { "id": 132, "hora_saida": "15:00", "tipo": "SABADO", "observacao": "" },
+        { "id": 133, "hora_saida": "16:15", "tipo": "SABADO", "observacao": "" },
+        { "id": 134, "hora_saida": "17:00", "tipo": "SABADO", "observacao": "" },
+        { "id": 135, "hora_saida": "18:15", "tipo": "SABADO", "observacao": "" },
+        { "id": 136, "hora_saida": "20:30", "tipo": "SABADO", "observacao": "" },
+        { "id": 137, "hora_saida": "23:20", "tipo": "SABADO", "observacao": "" },
+
+        { "id": 138, "hora_saida": "07:15", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 139, "hora_saida": "11:30", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 140, "hora_saida": "15:00", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 141, "hora_saida": "18:15", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 142, "hora_saida": "23:20", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 143, "hora_saida": "07:15", "tipo": "FERIADO", "observacao": "" },
+        { "id": 144, "hora_saida": "11:30", "tipo": "FERIADO", "observacao": "" },
+        { "id": 145, "hora_saida": "15:00", "tipo": "FERIADO", "observacao": "" },
+        { "id": 146, "hora_saida": "18:15", "tipo": "FERIADO", "observacao": "" },
+        { "id": 147, "hora_saida": "23:20", "tipo": "FERIADO", "observacao": "" }
+      ],
+      "tarifas": [
+        { "origem_id": 1, "destino_id": 10, "valor": 6.50 },
+        { "origem_id": 1, "destino_id": 2, "valor": 8.95 },
+        { "origem_id": 1, "destino_id": 3, "valor": 13.35 },
+        { "origem_id": 10, "destino_id": 2, "valor": 7.25 },
+        { "origem_id": 10, "destino_id": 3, "valor": 9.35 },
+        { "origem_id": 2, "destino_id": 3, "valor": 6.70 }
+      ]
+    },
+    {
+      "id": 2,
+      "codigo": "CR-01",
+      "nome": "Cajati × Registro",
+      "slug": "cajati-registro",
+      "descricao": "Linha ligando Cajati, Jacupiranga e Registro. Baseada na tabela vigente a partir de 02/02/2026.",
+      "ativa": true,
+      "paradas": [
+        { "parada_id": 3, "ordem": 1, "tempo_minutos": 0 },
+        { "parada_id": 2, "ordem": 2, "tempo_minutos": 20 },
+        { "parada_id": 10, "ordem": 3, "tempo_minutos": 35 },
+        { "parada_id": 1, "ordem": 4, "tempo_minutos": 50 }
+      ],
+      "horarios": [
+        { "id": 200, "hora_saida": "05:30", "tipo": "UTIL", "observacao": "" },
+        { "id": 201, "hora_saida": "06:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 202, "hora_saida": "06:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 203, "hora_saida": "06:20", "tipo": "UTIL", "observacao": "" },
+        { "id": 204, "hora_saida": "06:40", "tipo": "UTIL", "observacao": "" },
+        { "id": 205, "hora_saida": "06:50", "tipo": "UTIL", "observacao": "" },
+        { "id": 206, "hora_saida": "07:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 207, "hora_saida": "08:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 208, "hora_saida": "08:30", "tipo": "UTIL", "observacao": "" },
+        { "id": 209, "hora_saida": "10:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 210, "hora_saida": "11:20", "tipo": "UTIL", "observacao": "" },
+        { "id": 211, "hora_saida": "12:15", "tipo": "UTIL", "observacao": "" },
+        { "id": 212, "hora_saida": "13:15", "tipo": "UTIL", "observacao": "" },
+        { "id": 213, "hora_saida": "13:45", "tipo": "UTIL", "observacao": "" },
+        { "id": 214, "hora_saida": "14:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 215, "hora_saida": "15:15", "tipo": "UTIL", "observacao": "" },
+        { "id": 216, "hora_saida": "16:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 217, "hora_saida": "17:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 218, "hora_saida": "17:30", "tipo": "UTIL", "observacao": "" },
+        { "id": 219, "hora_saida": "17:45", "tipo": "UTIL", "observacao": "Via Faculdade (Somente p/ Cajati)" },
+        { "id": 220, "hora_saida": "18:20", "tipo": "UTIL", "observacao": "Via Faculdade" },
+        { "id": 221, "hora_saida": "19:15", "tipo": "UTIL", "observacao": "" },
+        { "id": 222, "hora_saida": "20:20", "tipo": "UTIL", "observacao": "" },
+        { "id": 223, "hora_saida": "22:00", "tipo": "UTIL", "observacao": "" },
+
+        { "id": 224, "hora_saida": "05:30", "tipo": "SABADO", "observacao": "" },
+        { "id": 225, "hora_saida": "06:00", "tipo": "SABADO", "observacao": "" },
+        { "id": 226, "hora_saida": "06:45", "tipo": "SABADO", "observacao": "" },
+        { "id": 227, "hora_saida": "07:30", "tipo": "SABADO", "observacao": "" },
+        { "id": 228, "hora_saida": "08:30", "tipo": "SABADO", "observacao": "" },
+        { "id": 229, "hora_saida": "10:00", "tipo": "SABADO", "observacao": "" },
+        { "id": 230, "hora_saida": "12:00", "tipo": "SABADO", "observacao": "" },
+        { "id": 231, "hora_saida": "13:30", "tipo": "SABADO", "observacao": "" },
+        { "id": 232, "hora_saida": "14:00", "tipo": "SABADO", "observacao": "" },
+        { "id": 233, "hora_saida": "15:10", "tipo": "SABADO", "observacao": "" },
+        { "id": 234, "hora_saida": "16:00", "tipo": "SABADO", "observacao": "" },
+        { "id": 235, "hora_saida": "17:30", "tipo": "SABADO", "observacao": "" },
+        { "id": 236, "hora_saida": "19:00", "tipo": "SABADO", "observacao": "" },
+        { "id": 237, "hora_saida": "22:00", "tipo": "SABADO", "observacao": "" },
+
+        { "id": 238, "hora_saida": "06:00", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 239, "hora_saida": "09:00", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 240, "hora_saida": "13:00", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 241, "hora_saida": "17:00", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 242, "hora_saida": "22:00", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 243, "hora_saida": "06:00", "tipo": "FERIADO", "observacao": "" },
+        { "id": 244, "hora_saida": "09:00", "tipo": "FERIADO", "observacao": "" },
+        { "id": 245, "hora_saida": "13:00", "tipo": "FERIADO", "observacao": "" },
+        { "id": 246, "hora_saida": "17:00", "tipo": "FERIADO", "observacao": "" },
+        { "id": 247, "hora_saida": "22:00", "tipo": "FERIADO", "observacao": "" }
+      ],
+      "tarifas": [
+        { "origem_id": 3, "destino_id": 2, "valor": 6.70 },
+        { "origem_id": 3, "destino_id": 10, "valor": 9.35 },
+        { "origem_id": 3, "destino_id": 1, "valor": 13.35 },
+        { "origem_id": 2, "destino_id": 10, "valor": 7.25 },
+        { "origem_id": 2, "destino_id": 1, "valor": 8.95 },
+        { "origem_id": 10, "destino_id": 1, "valor": 6.50 }
+      ]
+    },
+    {
+      "id": 3,
+      "codigo": "SB-01",
+      "nome": "Registro × Sete Barras",
+      "slug": "registro-sete-barras",
+      "descricao": "Rápido Perus - Tabela a partir de 02/03/2026.",
+      "ativa": true,
+      "paradas": [
+        { "parada_id": 1, "ordem": 1, "tempo_minutos": 0 },
+        { "parada_id": 5, "ordem": 2, "tempo_minutos": 45 }
+      ],
+      "horarios": [
+        { "id": 300, "hora_saida": "06:10", "tipo": "UTIL", "observacao": "" },
+        { "id": 301, "hora_saida": "07:30", "tipo": "UTIL", "observacao": "" },
+        { "id": 302, "hora_saida": "07:50", "tipo": "UTIL", "observacao": "" },
+        { "id": 303, "hora_saida": "09:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 304, "hora_saida": "10:20", "tipo": "UTIL", "observacao": "" },
+        { "id": 305, "hora_saida": "11:15", "tipo": "UTIL", "observacao": "" },
+        { "id": 306, "hora_saida": "12:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 307, "hora_saida": "13:30", "tipo": "UTIL", "observacao": "" },
+        { "id": 308, "hora_saida": "14:45", "tipo": "UTIL", "observacao": "" },
+        { "id": 309, "hora_saida": "16:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 310, "hora_saida": "17:30", "tipo": "UTIL", "observacao": "" },
+        { "id": 311, "hora_saida": "18:10", "tipo": "UTIL", "observacao": "" },
+        { "id": 312, "hora_saida": "22:30", "tipo": "UTIL", "observacao": "" },
+
+        { "id": 313, "hora_saida": "07:50", "tipo": "SABADO", "observacao": "" },
+        { "id": 314, "hora_saida": "10:20", "tipo": "SABADO", "observacao": "" },
+        { "id": 315, "hora_saida": "12:00", "tipo": "SABADO", "observacao": "" },
+        { "id": 316, "hora_saida": "14:45", "tipo": "SABADO", "observacao": "" },
+        { "id": 317, "hora_saida": "18:10", "tipo": "SABADO", "observacao": "" },
+
+        { "id": 318, "hora_saida": "09:00", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 319, "hora_saida": "18:10", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 320, "hora_saida": "09:00", "tipo": "FERIADO", "observacao": "" },
+        { "id": 321, "hora_saida": "18:10", "tipo": "FERIADO", "observacao": "" }
+      ],
+      "tarifas": [
+        { "origem_id": 1, "destino_id": 5, "valor": 7.55 }
+      ]
+    },
+    {
+      "id": 4,
+      "codigo": "SB-02",
+      "nome": "Sete Barras × Registro",
+      "slug": "sete-barras-registro",
+      "descricao": "Rápido Perus - Tabela a partir de 02/03/2026.",
+      "ativa": true,
+      "paradas": [
+        { "parada_id": 5, "ordem": 1, "tempo_minutos": 0 },
+        { "parada_id": 1, "ordem": 2, "tempo_minutos": 45 }
+      ],
+      "horarios": [
+        { "id": 400, "hora_saida": "05:30", "tipo": "UTIL", "observacao": "" },
+        { "id": 401, "hora_saida": "06:50", "tipo": "UTIL", "observacao": "" },
+        { "id": 402, "hora_saida": "07:05", "tipo": "UTIL", "observacao": "" },
+        { "id": 403, "hora_saida": "08:10", "tipo": "UTIL", "observacao": "" },
+        { "id": 404, "hora_saida": "08:35", "tipo": "UTIL", "observacao": "" },
+        { "id": 405, "hora_saida": "09:45", "tipo": "UTIL", "observacao": "" },
+        { "id": 406, "hora_saida": "11:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 407, "hora_saida": "12:15", "tipo": "UTIL", "observacao": "" },
+        { "id": 408, "hora_saida": "13:30", "tipo": "UTIL", "observacao": "" },
+        { "id": 409, "hora_saida": "14:45", "tipo": "UTIL", "observacao": "" },
+        { "id": 410, "hora_saida": "16:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 411, "hora_saida": "17:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 412, "hora_saida": "18:30", "tipo": "UTIL", "observacao": "" },
+
+        { "id": 413, "hora_saida": "07:05", "tipo": "SABADO", "observacao": "" },
+        { "id": 414, "hora_saida": "08:35", "tipo": "SABADO", "observacao": "" },
+        { "id": 415, "hora_saida": "11:00", "tipo": "SABADO", "observacao": "" },
+        { "id": 416, "hora_saida": "13:30", "tipo": "SABADO", "observacao": "" },
+        { "id": 417, "hora_saida": "17:30", "tipo": "SABADO", "observacao": "" },
+
+        { "id": 418, "hora_saida": "07:05", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 419, "hora_saida": "17:30", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 420, "hora_saida": "07:05", "tipo": "FERIADO", "observacao": "" },
+        { "id": 421, "hora_saida": "17:30", "tipo": "FERIADO", "observacao": "" }
+      ],
+      "tarifas": [
+        { "origem_id": 5, "destino_id": 1, "valor": 7.55 }
+      ]
+    },
+    {
+      "id": 5,
+      "codigo": "PR-01",
+      "nome": "Registro × Pariquera-Açu",
+      "slug": "registro-pariquera-acu",
+      "descricao": "Rápido Perus - Segunda a Sexta. A partir de 02/01/2026. Obs: Não opera Sábados, Domingos e Feriados.",
+      "ativa": true,
+      "paradas": [
+        { "parada_id": 1, "ordem": 1, "tempo_minutos": 0 },
+        { "parada_id": 7, "ordem": 2, "tempo_minutos": 40 }
+      ],
+      "horarios": [
+        { "id": 500, "hora_saida": "07:00", "tipo": "UTIL", "observacao": "Via Laranjeirinha" },
+        { "id": 501, "hora_saida": "10:00", "tipo": "UTIL", "observacao": "Via Petropen" },
+        { "id": 502, "hora_saida": "11:50", "tipo": "UTIL", "observacao": "Via Laranjeirinha" },
+        { "id": 503, "hora_saida": "14:45", "tipo": "UTIL", "observacao": "Via Petropen" },
+        { "id": 504, "hora_saida": "16:15", "tipo": "UTIL", "observacao": "Via Petropen" },
+        { "id": 505, "hora_saida": "17:55", "tipo": "UTIL", "observacao": "Via Laranjeirinha" }
+      ],
+      "tarifas": [
+        { "origem_id": 1, "destino_id": 7, "valor": 7.55 }
+      ]
+    },
+    {
+      "id": 6,
+      "codigo": "PR-02",
+      "nome": "Pariquera-Açu × Registro",
+      "slug": "pariquera-acu-registro",
+      "descricao": "Rápido Perus - Segunda a Sexta. A partir de 02/01/2026. Obs: Não opera Sábados, Domingos e Feriados.",
+      "ativa": true,
+      "paradas": [
+        { "parada_id": 7, "ordem": 1, "tempo_minutos": 0 },
+        { "parada_id": 1, "ordem": 2, "tempo_minutos": 40 }
+      ],
+      "horarios": [
+        { "id": 600, "hora_saida": "06:00", "tipo": "UTIL", "observacao": "Via Laranjeirinha" },
+        { "id": 601, "hora_saida": "08:50", "tipo": "UTIL", "observacao": "Via Petropen" },
+        { "id": 602, "hora_saida": "11:00", "tipo": "UTIL", "observacao": "Via Laranjeirinha" },
+        { "id": 603, "hora_saida": "12:45", "tipo": "UTIL", "observacao": "Via Petropen" },
+        { "id": 604, "hora_saida": "15:30", "tipo": "UTIL", "observacao": "Via Petropen" },
+        { "id": 605, "hora_saida": "17:15", "tipo": "UTIL", "observacao": "Via Laranjeirinha" }
+      ],
+      "tarifas": [
+        { "origem_id": 7, "destino_id": 1, "valor": 7.55 }
+      ]
+    },
+    {
+      "id": 7,
+      "codigo": "IPO-01",
+      "nome": "Iporanga × Registro",
+      "slug": "iporanga-registro",
+      "descricao": "Tabela de Preços (Linha Iporanga - Registro).",
+      "ativa": true,
+      "paradas": [
+        { "parada_id": 11, "ordem": 1, "tempo_minutos": 0 },
+        { "parada_id": 12, "ordem": 2, "tempo_minutos": 30 },
+        { "parada_id": 4, "ordem": 3, "tempo_minutos": 60 },
+        { "parada_id": 2, "ordem": 4, "tempo_minutos": 100 },
+        { "parada_id": 1, "ordem": 5, "tempo_minutos": 130 }
+      ],
+      "horarios": [
+        { "id": 700, "hora_saida": "06:00", "tipo": "UTIL", "observacao": "Horário ilustrativo para demonstração das tarifas" },
+        { "id": 701, "hora_saida": "12:00", "tipo": "UTIL", "observacao": "Horário ilustrativo para demonstração das tarifas" }
+      ],
+      "tarifas": [
+        { "origem_id": 11, "destino_id": 12, "valor": 14.20 },
+        { "origem_id": 11, "destino_id": 4, "valor": 19.85 },
+        { "origem_id": 11, "destino_id": 2, "valor": 26.95 },
+        { "origem_id": 11, "destino_id": 1, "valor": 34.55 },
+        { "origem_id": 12, "destino_id": 4, "valor": 7.00 },
+        { "origem_id": 12, "destino_id": 2, "valor": 11.55 },
+        { "origem_id": 12, "destino_id": 1, "valor": 19.85 },
+        { "origem_id": 2, "destino_id": 1, "valor": 8.95 }
+      ]
+    },
+    {
+      "id": 8,
+      "codigo": "JR-01",
+      "nome": "Jacupiranga × Registro",
+      "slug": "jacupiranga-registro",
+      "descricao": "Baseada na nova tabela vigente a partir de 02/02/2026.",
+      "ativa": true,
+      "paradas": [
+        { "parada_id": 2, "ordem": 1, "tempo_minutos": 0 },
+        { "parada_id": 10, "ordem": 2, "tempo_minutos": 15 },
+        { "parada_id": 1, "ordem": 3, "tempo_minutos": 30 }
+      ],
+      "horarios": [
+        { "id": 801, "hora_saida": "05:40", "tipo": "UTIL", "observacao": "" },
+        { "id": 802, "hora_saida": "06:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 803, "hora_saida": "06:15", "tipo": "UTIL", "observacao": "" },
+        { "id": 804, "hora_saida": "06:40", "tipo": "UTIL", "observacao": "" },
+        { "id": 805, "hora_saida": "06:55", "tipo": "UTIL", "observacao": "" },
+        { "id": 806, "hora_saida": "07:09", "tipo": "UTIL", "observacao": "" },
+        { "id": 807, "hora_saida": "07:45", "tipo": "UTIL", "observacao": "" },
+        { "id": 808, "hora_saida": "08:45", "tipo": "UTIL", "observacao": "" },
+        { "id": 809, "hora_saida": "09:45", "tipo": "UTIL", "observacao": "" },
+        { "id": 810, "hora_saida": "10:45", "tipo": "UTIL", "observacao": "Via Faculdade (Seg. a Qui.)" },
+        { "id": 811, "hora_saida": "11:45", "tipo": "UTIL", "observacao": "" },
+        { "id": 812, "hora_saida": "12:30", "tipo": "UTIL", "observacao": "" },
+        { "id": 813, "hora_saida": "13:30", "tipo": "UTIL", "observacao": "" },
+        { "id": 814, "hora_saida": "14:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 815, "hora_saida": "14:15", "tipo": "UTIL", "observacao": "" },
+        { "id": 816, "hora_saida": "15:25", "tipo": "UTIL", "observacao": "" },
+        { "id": 817, "hora_saida": "16:25", "tipo": "UTIL", "observacao": "" },
+        { "id": 818, "hora_saida": "17:15", "tipo": "UTIL", "observacao": "" },
+        { "id": 819, "hora_saida": "17:16", "tipo": "UTIL", "observacao": "" },
+        { "id": 820, "hora_saida": "17:46", "tipo": "UTIL", "observacao": "" },
+        { "id": 821, "hora_saida": "18:01", "tipo": "UTIL", "observacao": "" },
+        { "id": 822, "hora_saida": "18:35", "tipo": "UTIL", "observacao": "Via Faculdade (Seg. a Sex.)" },
+        { "id": 823, "hora_saida": "19:25", "tipo": "UTIL", "observacao": "" },
+        { "id": 824, "hora_saida": "20:40", "tipo": "UTIL", "observacao": "" },
+        { "id": 825, "hora_saida": "22:20", "tipo": "UTIL", "observacao": "" },
+
+        { "id": 826, "hora_saida": "05:45", "tipo": "SABADO", "observacao": "" },
+        { "id": 827, "hora_saida": "06:15", "tipo": "SABADO", "observacao": "" },
+        { "id": 828, "hora_saida": "07:00", "tipo": "SABADO", "observacao": "" },
+        { "id": 829, "hora_saida": "07:45", "tipo": "SABADO", "observacao": "" },
+        { "id": 830, "hora_saida": "08:45", "tipo": "SABADO", "observacao": "" },
+        { "id": 831, "hora_saida": "10:15", "tipo": "SABADO", "observacao": "" },
+        { "id": 832, "hora_saida": "12:15", "tipo": "SABADO", "observacao": "" },
+        { "id": 833, "hora_saida": "13:45", "tipo": "SABADO", "observacao": "" },
+        { "id": 834, "hora_saida": "14:15", "tipo": "SABADO", "observacao": "" },
+        { "id": 835, "hora_saida": "16:00", "tipo": "SABADO", "observacao": "" },
+        { "id": 836, "hora_saida": "17:15", "tipo": "SABADO", "observacao": "" },
+        { "id": 837, "hora_saida": "19:05", "tipo": "SABADO", "observacao": "" },
+        { "id": 838, "hora_saida": "22:15", "tipo": "SABADO", "observacao": "" },
+
+        { "id": 839, "hora_saida": "06:15", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 840, "hora_saida": "09:15", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 841, "hora_saida": "14:00", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 842, "hora_saida": "17:15", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 843, "hora_saida": "22:15", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 844, "hora_saida": "06:15", "tipo": "FERIADO", "observacao": "" },
+        { "id": 845, "hora_saida": "09:15", "tipo": "FERIADO", "observacao": "" },
+        { "id": 846, "hora_saida": "14:00", "tipo": "FERIADO", "observacao": "" },
+        { "id": 847, "hora_saida": "17:15", "tipo": "FERIADO", "observacao": "" },
+        { "id": 848, "hora_saida": "22:15", "tipo": "FERIADO", "observacao": "" }
+      ],
+      "tarifas": [
+        { "origem_id": 2, "destino_id": 10, "valor": 7.25 },
+        { "origem_id": 2, "destino_id": 1, "valor": 8.95 },
+        { "origem_id": 10, "destino_id": 1, "valor": 6.50 }
+      ]
+    },
+    {
+      "id": 9,
+      "codigo": "RJ-02",
+      "nome": "Registro × Jacupiranga",
+      "slug": "registro-jacupiranga",
+      "descricao": "Baseada na nova tabela vigente a partir de 02/02/2026.",
+      "ativa": true,
+      "paradas": [
+        { "parada_id": 1, "ordem": 1, "tempo_minutos": 0 },
+        { "parada_id": 10, "ordem": 2, "tempo_minutos": 15 },
+        { "parada_id": 2, "ordem": 3, "tempo_minutos": 30 }
+      ],
+      "horarios": [
+        { "id": 901, "hora_saida": "05:30", "tipo": "UTIL", "observacao": "" },
+        { "id": 902, "hora_saida": "06:15", "tipo": "UTIL", "observacao": "" },
+        { "id": 903, "hora_saida": "06:45", "tipo": "UTIL", "observacao": "" },
+        { "id": 904, "hora_saida": "06:55", "tipo": "UTIL", "observacao": "" },
+        { "id": 905, "hora_saida": "08:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 906, "hora_saida": "09:15", "tipo": "UTIL", "observacao": "" },
+        { "id": 907, "hora_saida": "10:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 908, "hora_saida": "11:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 909, "hora_saida": "12:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 910, "hora_saida": "12:45", "tipo": "UTIL", "observacao": "" },
+        { "id": 911, "hora_saida": "13:55", "tipo": "UTIL", "observacao": "" },
+        { "id": 912, "hora_saida": "14:55", "tipo": "UTIL", "observacao": "" },
+        { "id": 913, "hora_saida": "15:05", "tipo": "UTIL", "observacao": "" },
+        { "id": 914, "hora_saida": "15:30", "tipo": "UTIL", "observacao": "" },
+        { "id": 915, "hora_saida": "16:00", "tipo": "UTIL", "observacao": "" },
+        { "id": 916, "hora_saida": "16:30", "tipo": "UTIL", "observacao": "" },
+        { "id": 917, "hora_saida": "17:05", "tipo": "UTIL", "observacao": "" },
+        { "id": 918, "hora_saida": "17:30", "tipo": "UTIL", "observacao": "" },
+        { "id": 919, "hora_saida": "17:45", "tipo": "UTIL", "observacao": "" },
+        { "id": 920, "hora_saida": "18:15", "tipo": "UTIL", "observacao": "" },
+        { "id": 921, "hora_saida": "19:15", "tipo": "UTIL", "observacao": "" },
+        { "id": 922, "hora_saida": "20:30", "tipo": "UTIL", "observacao": "" },
+        { "id": 923, "hora_saida": "22:30", "tipo": "UTIL", "observacao": "Via Faculdade Ongarato (Seg. a Qui.) - Não passa na Rodoviária" },
+        { "id": 924, "hora_saida": "22:31", "tipo": "UTIL", "observacao": "Via Cebolinha (Seg. a Qui.) - Não passa na Rodoviária" },
+        { "id": 925, "hora_saida": "23:15", "tipo": "UTIL", "observacao": "" },
+
+        { "id": 926, "hora_saida": "05:30", "tipo": "SABADO", "observacao": "" },
+        { "id": 927, "hora_saida": "06:50", "tipo": "SABADO", "observacao": "" },
+        { "id": 928, "hora_saida": "08:00", "tipo": "SABADO", "observacao": "" },
+        { "id": 929, "hora_saida": "10:00", "tipo": "SABADO", "observacao": "" },
+        { "id": 930, "hora_saida": "12:00", "tipo": "SABADO", "observacao": "" },
+        { "id": 931, "hora_saida": "13:00", "tipo": "SABADO", "observacao": "" },
+        { "id": 932, "hora_saida": "14:00", "tipo": "SABADO", "observacao": "" },
+        { "id": 933, "hora_saida": "15:00", "tipo": "SABADO", "observacao": "" },
+        { "id": 934, "hora_saida": "16:15", "tipo": "SABADO", "observacao": "" },
+        { "id": 935, "hora_saida": "17:15", "tipo": "SABADO", "observacao": "" },
+        { "id": 936, "hora_saida": "18:10", "tipo": "SABADO", "observacao": "" },
+        { "id": 937, "hora_saida": "20:30", "tipo": "SABADO", "observacao": "" },
+        { "id": 938, "hora_saida": "23:15", "tipo": "SABADO", "observacao": "" },
+
+        { "id": 939, "hora_saida": "07:15", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 940, "hora_saida": "11:30", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 941, "hora_saida": "15:00", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 942, "hora_saida": "18:15", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 943, "hora_saida": "23:15", "tipo": "DOMINGO", "observacao": "" },
+        { "id": 944, "hora_saida": "07:15", "tipo": "FERIADO", "observacao": "" },
+        { "id": 945, "hora_saida": "11:30", "tipo": "FERIADO", "observacao": "" },
+        { "id": 946, "hora_saida": "15:00", "tipo": "FERIADO", "observacao": "" },
+        { "id": 947, "hora_saida": "18:15", "tipo": "FERIADO", "observacao": "" },
+        { "id": 948, "hora_saida": "23:15", "tipo": "FERIADO", "observacao": "" }
+      ],
+      "tarifas": [
+        { "origem_id": 1, "destino_id": 10, "valor": 6.50 },
+        { "origem_id": 1, "destino_id": 2, "valor": 8.95 },
+        { "origem_id": 10, "destino_id": 2, "valor": 7.25 }
+      ]
+    }
+  ],
+  "avisos": [
+    {
+      "id": 1,
+      "titulo": "Rodovia Interditada",
+      "conteudo": "A Rodovia Régis Bittencourt (BR-116) está parcialmente interditada no km 450 devido a obras. Atrasos previstos em todas as linhas Cajati e Jacupiranga.",
+      "tipo": "URGENTE",
+      "ativo": false
+    },
+    {
+      "id": 2,
+      "titulo": "Novos Horários Vigentes",
+      "conteudo": "As tabelas de horários foram em sua maior parte atualizadas para as vigências de Fev/2026. Note que a linha de Pariquera-Açu não opera aos fins de semana.",
+      "tipo": "INFORMATIVO",
+      "ativo": true
+    }
+  ]
+}
