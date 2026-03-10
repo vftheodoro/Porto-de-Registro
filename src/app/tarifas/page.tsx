@@ -57,7 +57,8 @@ export default async function TarifasPage() {
           <section className="pagamento-policy" aria-label="Formas de pagamento">
             <div className="pagamento-policy__header">
               <h2 className="pagamento-policy__title">Formas de pagamento</h2>
-              <p className="pagamento-policy__subtitle">Importante: a forma de pagamento muda conforme o local de embarque</p>
+              <p className="pagamento-policy__subtitle">A forma de pagamento muda conforme o local de embarque. Confira antes de entrar no veiculo.</p>
+              <div className="pagamento-policy__alert">Embarque fora da rodoviaria: leve dinheiro trocado.</div>
             </div>
 
             <div className="pagamento-policy__grid">
@@ -65,20 +66,22 @@ export default async function TarifasPage() {
                 <div className="pagamento-card__top">
                   <Building2 size={18} /> Na rodoviaria
                 </div>
-                <div className="pagamento-card__methods">
-                  <span className="pagamento-method"><QrCode size={15} /> Pix</span>
-                  <span className="pagamento-method"><CreditCard size={15} /> Cartao</span>
-                  <span className="pagamento-method"><Banknote size={15} /> Dinheiro</span>
-                </div>
+                <p className="pagamento-card__hint">Aceita todos os meios abaixo:</p>
+                <ul className="pagamento-card__methods" aria-label="Formas aceitas na rodoviaria">
+                  <li className="pagamento-method"><QrCode size={15} /> Pix</li>
+                  <li className="pagamento-method"><CreditCard size={15} /> Cartao (debito e credito)</li>
+                  <li className="pagamento-method"><Banknote size={15} /> Dinheiro</li>
+                </ul>
               </article>
 
               <article className="pagamento-card pagamento-card--onibus">
                 <div className="pagamento-card__top">
                   <Bus size={18} /> No onibus (fora da rodoviaria)
                 </div>
-                <div className="pagamento-card__methods">
-                  <span className="pagamento-method pagamento-method--only-cash"><Banknote size={15} /> Somente dinheiro fisico</span>
-                </div>
+                <p className="pagamento-card__hint">Pagamento direto ao motorista:</p>
+                <ul className="pagamento-card__methods" aria-label="Formas aceitas no onibus">
+                  <li className="pagamento-method pagamento-method--only-cash"><Banknote size={15} /> Somente dinheiro em especie</li>
+                </ul>
               </article>
             </div>
           </section>
@@ -100,7 +103,7 @@ export default async function TarifasPage() {
                       <tr>
                         <th>Origem</th>
                         <th>Destino</th>
-                        <th style={{ textAlign: 'right' }}>Tarifa</th>
+                        <th className="fare-table__col-price">Tarifa</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -108,7 +111,7 @@ export default async function TarifasPage() {
                         <tr key={idx}>
                           <td>{t.origem_nome}</td>
                           <td>{t.destino_nome}</td>
-                          <td style={{ textAlign: 'right' }}>
+                          <td className="fare-table__col-price">
                             <span className="fare-table__value">
                               R$ {t.valor.toFixed(2)}
                             </span>

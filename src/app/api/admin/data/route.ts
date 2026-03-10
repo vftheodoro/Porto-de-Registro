@@ -11,6 +11,8 @@ import {
 } from '@/lib/security';
 import { validateDatabasePayload } from '@/lib/validate-db';
 
+export const dynamic = 'force-static';
+
 async function isAuthenticated(request: Request): Promise<boolean> {
   const cookie = request.headers.get('cookie') ?? '';
   const match = cookie.match(new RegExp(`${getAdminCookieName()}=([^;]+)`));

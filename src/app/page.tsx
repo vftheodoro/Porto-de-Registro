@@ -142,7 +142,7 @@ export default async function HomePage() {
                   alt="Ônibus Porto de Registro - Marcopolo Torino branco"
                   width={560}
                   height={320}
-                  style={{ objectFit: 'contain', width: '100%', height: 'auto' }}
+                  className="frota-card__image"
                 />
               </div>
               <div className="frota-card__info">
@@ -157,7 +157,7 @@ export default async function HomePage() {
                   alt="Ônibus Porto de Registro - Neobus verde"
                   width={560}
                   height={320}
-                  style={{ objectFit: 'contain', width: '100%', height: 'auto' }}
+                  className="frota-card__image"
                 />
               </div>
               <div className="frota-card__info">
@@ -172,7 +172,7 @@ export default async function HomePage() {
       {/* ===== Linhas populares ===== */}
       <section className="routes-section">
         <div className="container">
-          <div className="section__header" style={{ marginBottom: '2rem' }}>
+          <div className="section__header routes-section__header">
             <h2 className="section__title">Nossas Linhas</h2>
             <p className="section__subtitle">
               Conheca as principais rotas que conectam as cidades do Vale do Ribeira
@@ -188,7 +188,7 @@ export default async function HomePage() {
               >
                 <div className="route-card__code">{linha.codigo}</div>
                 <div className="route-card__name">{linha.nome}</div>
-                <div className="route-card__cities" style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                <div className="route-card__cities route-card__cities--icon">
                   <MapPin size={16} /> {linha.cidades.split(', ').join(' → ')}
                 </div>
                 <div className="route-card__badges">
@@ -200,7 +200,7 @@ export default async function HomePage() {
             ))}
           </div>
 
-          <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+          <div className="routes-section__actions">
             <Link href="/linhas" className="btn btn--secondary">
               Ver todas as linhas →
             </Link>

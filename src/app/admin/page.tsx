@@ -3,8 +3,6 @@ import { getDb } from '@/lib/db';
 import { Megaphone, MapPin, Bus } from 'lucide-react';
 import DownloadJsonButton from '@/components/admin/DownloadJsonButton';
 
-export const dynamic = 'force-dynamic';
-
 export default async function AdminDashboardPage() {
   const db = getDb();
   const avisosAtivos = db.avisos.filter((a) => a.ativo).length;

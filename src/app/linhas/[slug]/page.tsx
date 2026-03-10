@@ -121,18 +121,18 @@ export default async function LinhaDetailPage({ params }: Props) {
     <>
       <Header />
 
-      <section style={{ background: 'linear-gradient(135deg, var(--verde-800), var(--verde-700))', padding: '3rem 0' }}>
+      <section className="linha-hero">
         <div className="container">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
-            <span className="badge badge--dourado" style={{ fontSize: '0.9rem', padding: '0.3rem 1rem' }}>
+          <div className="linha-hero__badge-row">
+            <span className="badge badge--dourado linha-hero__badge">
               {linhaOrig.codigo}
             </span>
           </div>
-          <h1 style={{ color: 'var(--branco)', fontSize: 'var(--texto-3xl)', fontFamily: 'var(--fonte-titulo)', marginBottom: '0.5rem' }}>
+          <h1 className="linha-hero__title">
             {linhaOrig.nome}
           </h1>
           {linhaOrig.descricao && (
-            <p style={{ color: 'var(--dourado-300)', fontSize: 'var(--texto-lg)' }}>
+            <p className="linha-hero__subtitle">
               {linhaOrig.descricao}
             </p>
           )}

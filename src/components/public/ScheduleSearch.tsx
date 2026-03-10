@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import type { BuscaResponse, ResultadoBusca, RotaConexaoBusca, TipoDia } from '@/types';
+import type { BuscaResponse, Database, ResultadoBusca, RotaConexaoBusca, TipoDia } from '@/types';
+import { buscarRotas, getParadasPublicas, listarDestinosAlcancaveis } from '@/lib/public-search';
 import { ArrowLeftRight, Coins, Bus, Search, Clock, Route, ArrowRight, Timer, Sparkles } from 'lucide-react';
 
 interface Parada {
@@ -11,6 +12,7 @@ interface Parada {
 }
 
 const SEARCH_STATE_STORAGE_KEY = 'porto-search-state-v1';
+const STATIC_EXPORT_MODE = process.env.NEXT_PUBLIC_STATIC_EXPORT === 'true';
 
 function toMin(hhmm: string): number {
   const [hh, mm] = hhmm.split(':').map(Number);
@@ -92,6 +94,7 @@ function getTodayTipoDia(baseDate?: Date): TipoDia {
 }
 
 export default function ScheduleSearch() {
+  const [dbStatic, setDbStatic] = useState<Database | null>(null);
   const [paradas, setParadas] = useState<Parada[]>([]);
   const [origem, setOrigem] = useState('');
   const [destino, setDestino] = useState('');
@@ -115,6 +118,17 @@ export default function ScheduleSearch() {
   }, []);
 
   useEffect(() => {
+    if (STATIC_EXPORT_MODE) {
+      fetch('/data.json')
+        .then((res) => res.json())
+        .then((db: Database) => {
+          setDbStatic(db);
+          setParadas(getParadasPublicas(db));
+        })
+        .catch(console.error);
+      return;
+    }
+
     fetch('/api/public/paradas')
       .then((res) => res.json())
       .then((data) => setParadas(data))
@@ -162,6 +176,25 @@ export default function ScheduleSearch() {
     }
 
     setLoadingDestinos(true);
+
+    if (STATIC_EXPORT_MODE) {
+      if (!dbStatic) {
+        setDestinosPermitidos([]);
+        setLoadingDestinos(false);
+        return;
+      }
+
+      try {
+        const destinos = listarDestinosAlcancaveis(dbStatic, origem, tipoDia);
+        setDestinosPermitidos(destinos);
+      } catch {
+        setDestinosPermitidos([]);
+      } finally {
+        setLoadingDestinos(false);
+      }
+      return;
+    }
+
     fetch(`/api/public/destinos?origem=${encodeURIComponent(origem)}&tipo=${tipoDia}`)
       .then((res) => res.json())
       .then((data) => {
@@ -172,7 +205,7 @@ export default function ScheduleSearch() {
         setDestinosPermitidos([]);
       })
       .finally(() => setLoadingDestinos(false));
-  }, [origem, tipoDia]);
+  }, [dbStatic, origem, tipoDia]);
 
   useEffect(() => {
     if (destino && !destinosPermitidos.includes(destino)) {
@@ -197,6 +230,36 @@ export default function ScheduleSearch() {
     setLoading(true);
     setSearched(true);
     setError('');
+
+    if (STATIC_EXPORT_MODE) {
+      if (!dbStatic) {
+        setResultados([]);
+        setConexoes([]);
+        setError('Base de dados local indisponivel. Tente recarregar a pagina.');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const { resultados: resultadosLocais, conexoes: conexoesLocais } = buscarRotas(
+          dbStatic,
+          origem,
+          destino,
+          tipoDia
+        );
+        setResultados(resultadosLocais);
+        setConexoes(conexoesLocais);
+      } catch (error) {
+        console.error('Erro na busca local:', error);
+        setResultados([]);
+        setConexoes([]);
+        setError('Erro ao buscar horarios.');
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
     try {
       const res = await fetch(
         `/api/public/busca?origem=${encodeURIComponent(origem)}&destino=${encodeURIComponent(destino)}&tipo=${tipoDia}`
@@ -215,7 +278,7 @@ export default function ScheduleSearch() {
     } finally {
       setLoading(false);
     }
-  }, [origem, destino, tipoDia]);
+  }, [dbStatic, origem, destino, tipoDia]);
 
   useEffect(() => {
     if (!shouldAutoSearch) return;
@@ -367,12 +430,12 @@ export default function ScheduleSearch() {
           disabled={!origem || !destino || loading || !destinosPermitidos.includes(destino)}
         >
           {loading ? (
-            <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', justifyContent: 'center' }}>
-              <span className="spinner" style={{ width: 18, height: 18 }} />
+            <span className="search-btn__content">
+              <span className="spinner search-btn__spinner" />
               Buscando...
             </span>
           ) : (
-            <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', justifyContent: 'center' }}>
+            <span className="search-btn__content">
               <Search size={18} /> Ver Horários
             </span>
           )}
@@ -381,7 +444,7 @@ export default function ScheduleSearch() {
 
       {/* Results */}
       {searched && (
-        <div style={{ maxWidth: 700, margin: '0 auto', padding: '0 1rem' }}>
+        <div className="search-results-wrap">
           {loading ? (
             <div className="loading-overlay">
               <span className="spinner" />
@@ -390,7 +453,7 @@ export default function ScheduleSearch() {
           ) : (resultados.length > 0 || conexoes.length > 0) ? (
             <>
             {error && (
-              <div className="results" style={{ marginTop: '1.5rem' }}>
+              <div className="results results--compact-top">
                 <div className="results__empty">
                   <p>{error}</p>
                 </div>
@@ -414,20 +477,20 @@ export default function ScheduleSearch() {
                 : null;
 
               return (
-                <div key={r.linha.id} className="results" style={{ marginTop: '1.5rem' }}>
+                <div key={r.linha.id} className="results results--compact-top">
                   <div className="results__header">
                     <div>
                       <div className="results__title">
                         {r.linha.nome}
                       </div>
-                      <div style={{ fontSize: '0.875rem', color: 'var(--cinza-600)', marginTop: '0.25rem' }}>
+                      <div className="results__meta">
                         {typeof r.tempo_estimado === 'number' && (
-                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                          <span className="results__meta-item">
                             <Clock size={14} /> {r.tempo_estimado} min
                           </span>
                         )}
                         {r.tarifa && (
-                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                          <span className="results__meta-item">
                             {' · '} <Coins size={14} /> R$ {r.tarifa.toFixed(2)}
                           </span>
                         )}
@@ -493,9 +556,9 @@ export default function ScheduleSearch() {
             })}
 
             {conexoes.length > 0 && (
-              <div className="results" style={{ marginTop: '1.5rem' }}>
+              <div className="results results--compact-top">
                 <div className="results__header">
-                  <div className="results__title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <div className="results__title results__title--with-icon">
                     <Route size={18} /> Rotas com conexao
                   </div>
                   <span className="badge badge--dourado">{conexoes.length} opcao(oes)</span>
@@ -507,7 +570,7 @@ export default function ScheduleSearch() {
                       <div className="connection-card__top">
                         <div className="connection-card__title-wrap">
                           <div className="connection-card__title-line">
-                            <strong>{rota.trechos[0].origem}</strong> <ArrowRight size={14} style={{ verticalAlign: 'middle' }} /> <strong>{rota.trechos[1].destino}</strong>
+                            <strong>{rota.trechos[0].origem}</strong> <ArrowRight size={14} className="icon-inline-middle" /> <strong>{rota.trechos[1].destino}</strong>
                           </div>
                           <div className="connection-card__periodo">
                             Saida {rota.saida_total} · Chegada {rota.chegada_total}
@@ -544,7 +607,7 @@ export default function ScheduleSearch() {
                             <div className="connection-leg__badge">Trecho {idx + 1}</div>
                             <div className="connection-leg__line">{trecho.linha.codigo} - {trecho.linha.nome}</div>
                             <div className="connection-leg__time">
-                              {trecho.origem} {trecho.saida} <ArrowRight size={14} style={{ verticalAlign: 'middle' }} /> {trecho.destino} {trecho.chegada}
+                              {trecho.origem} {trecho.saida} <ArrowRight size={14} className="icon-inline-middle" /> {trecho.destino} {trecho.chegada}
                             </div>
                           </div>
                         ))}
@@ -556,10 +619,10 @@ export default function ScheduleSearch() {
             )}
             </>
           ) : (
-            <div className="results" style={{ marginTop: '1.5rem' }}>
+            <div className="results results--compact-top">
               <div className="results__empty">
                 <div className="results__empty-icon"><Bus size={48} color="var(--cinza-400)" /></div>
-                <p style={{ fontWeight: 600, marginBottom: '0.5rem' }}>
+                <p className="results__empty-title">
                   Nenhum horario encontrado
                 </p>
                 <p>
@@ -567,7 +630,7 @@ export default function ScheduleSearch() {
                   <strong>{destino}</strong> para{' '}
                   {dias.find((d) => d.value === tipoDia)?.label?.toLowerCase()}.
                 </p>
-                <p style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}>
+                <p className="results__empty-help">
                   Tente outro dia ou verifique as linhas disponíveis.
                 </p>
               </div>

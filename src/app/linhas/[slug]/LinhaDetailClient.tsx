@@ -25,6 +25,7 @@ export default function LinhaDetailClient({
   horariosVolta,
   tarifasVolta,
 }: Props) {
+  const staticExportMode = process.env.NEXT_PUBLIC_STATIC_EXPORT === 'true';
   const [tipoDia, setTipoDia] = useState<TipoDia>('UTIL');
   const [activeTab, setActiveTab] = useState<'horarios' | 'paradas' | 'tarifas'>('horarios');
 
@@ -53,9 +54,9 @@ export default function LinhaDetailClient({
   ];
 
   const tabs = [
-    { id: 'horarios' as const, label: <><Clock size={16} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} /> Horários</>, count: horarios.length },
-    { id: 'paradas' as const, label: <><MapPin size={16} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} /> Paradas</>, count: paradas.length },
-    { id: 'tarifas' as const, label: <><Coins size={16} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} /> Tarifas</>, count: tarifas.length },
+    { id: 'horarios' as const, label: <><Clock size={16} className="icon-inline-start" /> Horários</>, count: horarios.length },
+    { id: 'paradas' as const, label: <><MapPin size={16} className="icon-inline-start" /> Paradas</>, count: paradas.length },
+    { id: 'tarifas' as const, label: <><Coins size={16} className="icon-inline-start" /> Tarifas</>, count: tarifas.length },
   ];
 
   const downloadPDF = async () => {
@@ -75,13 +76,13 @@ export default function LinhaDetailClient({
 
   return (
     <section className="section">
-      <div className="container" style={{ maxWidth: 900 }}>
-        <div className="linhas-overview" role="list" aria-label="Resumo da linha" style={{ marginBottom: '1.5rem' }}>
+      <div className="container container--line-detail">
+        <div className="linhas-overview line-detail-overview" role="list" aria-label="Resumo da linha">
           <article className="linhas-overview__item" role="listitem">
             <div className="linhas-overview__icon"><Route size={18} /></div>
             <div>
               <p className="linhas-overview__label">Trecho principal</p>
-              <strong className="linhas-overview__value" style={{ fontSize: '1rem' }}>
+              <strong className="linhas-overview__value line-detail-overview__value">
                 {origem?.parada_cidade || 'Origem'} → {destino?.parada_cidade || 'Destino'}
               </strong>
             </div>
@@ -97,7 +98,7 @@ export default function LinhaDetailClient({
             <div className="linhas-overview__icon"><Coins size={18} /></div>
             <div>
               <p className="linhas-overview__label">Faixa de tarifa</p>
-              <strong className="linhas-overview__value" style={{ fontSize: '1rem' }}>
+              <strong className="linhas-overview__value line-detail-overview__value">
                 {menorTarifa !== null && maiorTarifa !== null
                   ? `R$ ${menorTarifa.toFixed(2)} a R$ ${maiorTarifa.toFixed(2)}`
                   : 'Nao disponivel'}
@@ -107,13 +108,12 @@ export default function LinhaDetailClient({
         </div>
 
         {/* Tabs */}
-        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
+        <div className="line-detail-tabs">
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              className={`search-card__day-tab ${activeTab === tab.id ? 'search-card__day-tab--active' : ''}`}
+              className={`search-card__day-tab line-detail-tab ${activeTab === tab.id ? 'search-card__day-tab--active' : ''}`}
               onClick={() => setActiveTab(tab.id)}
-              style={{ fontSize: '1rem', padding: '0.5rem 1.25rem' }}
             >
               {tab.label} ({tab.count})
             </button>
@@ -123,8 +123,8 @@ export default function LinhaDetailClient({
         {/* Horários Tab */}
         {activeTab === 'horarios' && (
           <>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', marginBottom: '1rem' }}>
-              <div className="search-card__day-tabs" style={{ margin: 0 }}>
+            <div className="line-detail-toolbar">
+              <div className="search-card__day-tabs line-detail-day-tabs">
                 {dias.map((d) => (
                   <button
                     key={d.value}
@@ -135,13 +135,24 @@ export default function LinhaDetailClient({
                   </button>
                 ))}
               </div>
-              <button className="btn btn--secondary btn--sm" onClick={downloadPDF}>
-                <FileDown size={16} style={{ display: 'inline', marginRight: 6, verticalAlign: 'middle' }} />
-                Baixar PDF
-              </button>
+              {staticExportMode ? (
+                <span
+                  className="btn btn--secondary btn--sm"
+                  aria-disabled="true"
+                  title="PDF disponível apenas na versão com servidor"
+                >
+                  <FileDown size={16} className="icon-inline-start" />
+                  PDF disponivel na versao completa
+                </span>
+              ) : (
+                <button className="btn btn--secondary btn--sm" onClick={downloadPDF}>
+                  <FileDown size={16} className="icon-inline-start" />
+                  Baixar PDF
+                </button>
+              )}
             </div>
 
-            <div className="line-schedules-grid" style={{ marginTop: '1.25rem' }}>
+            <div className="line-schedules-grid line-schedules-grid--spaced">
               <div className="results line-schedule-panel">
                 <div className="results__header">
                   <div className="results__title">Ida: {linha.nome}</div>
@@ -149,7 +160,7 @@ export default function LinhaDetailClient({
                 </div>
                 {horariosFiltrados.length > 0 ? (
                   <>
-                    <table className="schedule-table" style={{ marginTop: 0 }}>
+                    <table className="schedule-table schedule-table--flush">
                       <thead>
                         <tr>
                           <th>Saída</th>
@@ -187,7 +198,7 @@ export default function LinhaDetailClient({
                     )}
                   </>
                 ) : (
-                  <div className="results__empty" style={{ padding: '1.25rem' }}>
+                  <div className="results__empty results__empty--compact">
                     <p>Nenhum horário de ida para {dias.find(d => d.value === tipoDia)?.label?.toLowerCase()}.</p>
                   </div>
                 )}
@@ -196,14 +207,14 @@ export default function LinhaDetailClient({
               {linhaVolta && (
                 <div className="results line-schedule-panel">
                   <div className="results__header">
-                    <div className="results__title" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <div className="results__title results__title--with-icon-sm">
                       <ArrowRightLeft size={16} /> Volta: {linhaVolta.nome}
                     </div>
                     <span className="badge badge--verde">{linhaVolta.codigo}</span>
                   </div>
                   {horariosVoltaFiltrados.length > 0 ? (
                     <>
-                      <table className="schedule-table" style={{ marginTop: 0 }}>
+                      <table className="schedule-table schedule-table--flush">
                         <thead>
                           <tr>
                             <th>Saída</th>
@@ -245,7 +256,7 @@ export default function LinhaDetailClient({
                       )}
                     </>
                   ) : (
-                    <div className="results__empty" style={{ padding: '1.25rem' }}>
+                    <div className="results__empty results__empty--compact">
                       <p>Nenhum horário de volta para este tipo de dia.</p>
                     </div>
                   )}
@@ -263,7 +274,7 @@ export default function LinhaDetailClient({
               <div key={parada.parada_id} className="stop-item">
                 <div className="stop-item__dot">
                   {index === 0 || index === paradas.length - 1 ? (
-                    <span style={{ color: 'white', fontSize: '0.7rem' }}>
+                    <span className="stop-item__dot-symbol">
                       {index === 0 ? '▶' : '■'}
                     </span>
                   ) : null}
@@ -315,7 +326,7 @@ export default function LinhaDetailClient({
             </div>
 
             {linhaVolta && tarifasVolta.length > 0 && (
-              <div className="results" style={{ marginTop: '1.25rem' }}>
+              <div className="results results--tight-top">
                 <div className="results__header">
                   <div className="results__title">Tarifas da volta: {linhaVolta.nome}</div>
                   <span className="badge badge--verde">{linhaVolta.codigo}</span>

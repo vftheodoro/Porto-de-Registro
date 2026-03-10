@@ -3,6 +3,8 @@ import { getDb } from '@/lib/db';
 import type { TipoDia } from '@/types';
 import { listarDestinosAlcancaveis } from '@/lib/route-planner';
 
+export const dynamic = 'force-static';
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);

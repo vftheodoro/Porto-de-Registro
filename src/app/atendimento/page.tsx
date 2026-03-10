@@ -89,9 +89,9 @@ export default async function AtendimentoPage() {
       <section className="section">
         <div className="container atendimento-layout">
           <div className="atendimento-main">
-            <div className="section__header" style={{ textAlign: 'left', marginBottom: '1.5rem' }}>
-              <h2 className="section__title" style={{ marginBottom: '0.25rem' }}>Jornada do atendimento</h2>
-              <p className="section__subtitle" style={{ fontSize: '1rem' }}>
+            <div className="section__header atendimento-section__header">
+              <h2 className="section__title atendimento-section__title">Jornada do atendimento</h2>
+              <p className="section__subtitle atendimento-section__subtitle">
                 Siga este fluxo para resolver pendencias com rapidez.
               </p>
             </div>
@@ -203,7 +203,7 @@ export default async function AtendimentoPage() {
               >
                 <Instagram size={16} /> Instagram
               </a>
-              <Link href="/horarios" className="btn btn--gold" style={{ marginTop: '0.35rem' }}>
+              <Link href="/horarios" className="btn btn--gold atendimento-contact-btn--extra">
                 Buscar horarios
               </Link>
             </div>
@@ -211,8 +211,8 @@ export default async function AtendimentoPage() {
         </div>
       </section>
 
-      <section className="section section--alt" style={{ paddingTop: '1rem' }}>
-        <div className="container" style={{ maxWidth: 980 }}>
+      <section className="section section--alt atendimento-final-section">
+        <div className="container atendimento-final-container">
           <div className="results">
             <div className="results__header">
               <div className="results__title">Atendimento com orientacao clara</div>

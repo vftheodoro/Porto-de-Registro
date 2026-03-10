@@ -8,31 +8,31 @@ export default function Footer() {
       <div className="container">
         <div className="footer__grid">
           <div>
-            <div className="footer__brand" style={{ marginBottom: '1rem' }}>
+            <div className="footer__brand footer__brand--spaced">
               <Image 
                 src="/images/logos/logo_porto_branca.png" 
                 alt="Porto de Registro" 
                 width={60} 
                 height={60} 
-                style={{ objectFit: 'contain' }} 
+                className="footer__brand-image"
               />
             </div>
-            <p className="footer__description" style={{ marginBottom: '1.5rem' }}>
+            <p className="footer__description footer__description--spaced">
               Empresa de transporte intermunicipal de passageiros do Vale do Ribeira,
               interior de São Paulo. Servindo a região com segurança e compromisso
               há décadas.
             </p>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderTop: '1px solid var(--cinza-800)', paddingTop: '1.5rem', marginTop: '1.5rem' }}>
-               <div style={{ fontSize: 'var(--texto-xs)', color: 'var(--cinza-500)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            <div className="footer__company">
+               <div className="footer__company-label">
                  Uma empresa
                </div>
-               <a href="https://www.rapidoperus.com.br/" target="_blank" rel="noopener noreferrer" style={{ display: 'block', transition: 'opacity var(--transicao-rapida)' }} className="hover-opacity">
+               <a href="https://www.rapidoperus.com.br/" target="_blank" rel="noopener noreferrer" className="footer__company-link">
                  <Image 
                    src="/images/logos/logo_rapido_perus.png" 
                    alt="Grupo Rápido Perus" 
                    width={120} 
                    height={30} 
-                   style={{ objectFit: 'contain' }} 
+                   className="footer__company-image"
                  />
                </a>
             </div>
@@ -53,10 +53,10 @@ export default function Footer() {
           <div>
             <h4 className="footer__title">Contato</h4>
             <ul className="footer__links">
-              <li><a href="https://wa.me/5511977795599" target="_blank" rel="noopener noreferrer" className="footer__link" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><Smartphone size={16} /> WhatsApp: (11) 97779-5599</a></li>
-              <li><a href="https://www.instagram.com/portoregistro/" target="_blank" rel="noopener noreferrer" className="footer__link" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><Instagram size={16} /> @portoregistro</a></li>
-              <li><span className="footer__link" style={{ display: 'flex', alignItems: 'flex-start', gap: '0.4rem' }}>
-                <MapPin size={16} style={{ flexShrink: 0, marginTop: '2px' }}/> 
+              <li><a href="https://wa.me/5511977795599" target="_blank" rel="noopener noreferrer" className="footer__link footer__link--contact"><Smartphone size={16} /> WhatsApp: (11) 97779-5599</a></li>
+              <li><a href="https://www.instagram.com/portoregistro/" target="_blank" rel="noopener noreferrer" className="footer__link footer__link--contact"><Instagram size={16} /> @portoregistro</a></li>
+              <li><span className="footer__link footer__link--contact footer__link--address">
+                <MapPin size={16} className="footer__icon"/> 
                 <span>
                   Rodovia Regis Bittencourt <br />
                   Registro - SP, 11.900-000

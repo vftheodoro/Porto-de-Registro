@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import { classificarAvisosPublicos } from '@/lib/avisos-publicos';
 
+export const dynamic = 'force-static';
+
 export async function GET(request: Request) {
   try {
     const db = getDb();

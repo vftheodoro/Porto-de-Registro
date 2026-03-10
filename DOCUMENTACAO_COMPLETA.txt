@@ -1,360 +1,290 @@
-PORTO DE REGISTRO - DOCUMENTACAO TECNICA COMPLETA
-Data da analise: 2026-03-10
+﻿PORTO DE REGISTRO - DOCUMENTACAO COMPLETA DO SITE
+Atualizado em: 2026-03-10
 
 ==================================================
-1) RESUMO EXECUTIVO
+1) VISAO GERAL
 ==================================================
 
-O projeto e uma aplicacao Next.js (App Router) para operacao de transporte intermunicipal.
-Ele concentra consulta publica (horarios, linhas, tarifas, avisos e rodoviarias) e um painel
-administrativo para manutencao dos dados do sistema via arquivo data.json.
+O projeto "Porto de Registro" e um portal web para consulta de horarios, linhas,
+tarifas, avisos e informacoes de atendimento ao passageiro no Vale do Ribeira.
 
-Resultado da analise:
-- Estado funcional: estavel
-- Fluxos principais: implementados
-- Risco operacional: medio
-- Maturidade tecnica: boa para operacao atual, com melhorias de seguranca recomendadas
-
-Pontos fortes:
-- Busca de horarios inteligente com suporte a conexoes
-- Filtro de destinos alcancaveis por origem e tipo de dia
-- Sincronizacao de estado de busca entre Home e Horarios
-- Deteccao automatica de dia util/sabado/domingo/feriado no front
-- Geracao de PDF operacional de horarios
-- Admin com sessao assinada e rotas protegidas
-- Testes automatizados cobrindo rotas criticas
-
-Pontos de atencao:
-- Sem rate-limit de tentativas de login admin
-- Senha admin comparada em texto plano (sem hash)
-- Arquitetura de persistencia depende de arquivo local (limite em serverless)
-- Aviso de deprecacao do middleware para proxy no Next 16+
-
-==================================================
-2) STACK E DEPENDENCIAS
-==================================================
-
-Framework e linguagem:
-- Next.js 16.1.6
-- React 19.2.3
+Tecnologias principais:
+- Next.js 16 (App Router)
+- React 19
 - TypeScript
-
-Bibliotecas importantes:
-- lucide-react (icones)
-- jsPDF + jspdf-autotable (PDF de horarios)
-- date-fns
-- xlsx
-
-Qualidade:
+- CSS global com design system proprio
+- Vitest (testes)
 - ESLint
-- Vitest
+- jsPDF + jspdf-autotable (na versao com servidor)
 
-Persistencia:
-- Arquivo local data.json (sem banco de dados)
+Objetivos do site:
+- Permitir busca de viagens por origem, destino e tipo de dia.
+- Exibir linhas, detalhes de itinerario, horarios e tarifas.
+- Concentrar atendimento ao passageiro.
+- Divulgar avisos operacionais.
+- Disponibilizar versao estatica para GitHub Pages.
 
-==================================================
-3) INVENTARIO DE DADOS (data.json)
-==================================================
-
-Metricas observadas:
-- Paradas: 12
-- Linhas: 9
-- Linhas ativas: 9
-- Avisos: 6
-- Cidades unicas: 12
-- Horarios: 250
-- Tarifas: 30
-
-Cidades identificadas:
-- Cajati
-- Eldorado
-- Iguape
-- Iporanga
-- Itapeuna
-- Jacupiranga
-- Juquia
-- Miracatu
-- Pariquera-Acu
-- Ponte Moreira
-- Registro
-- Sete Barras
-
-Modelo principal:
-- paradas[]
-- linhas[] (com paradas da rota, horarios e tarifas)
-- avisos[]
 
 ==================================================
-4) ARQUITETURA DE ALTO NIVEL
+2) ESTRUTURA DE DADOS (data.json)
 ==================================================
 
-Camada de dados:
-- src/lib/db.ts -> leitura de data.json com fallback para base vazia em erro
+Arquivo principal: data.json (raiz do projeto)
 
-Camada de negocio:
-- src/lib/route-planner.ts -> calculo de conexoes e destinos alcancaveis
-- src/lib/avisos-publicos.ts -> classificacao de avisos para exibicao
-- src/lib/auth-admin.ts -> autenticacao admin por cookie assinado
+Colecoes:
+- paradas
+- linhas
+- avisos
 
-Camada web (App Router):
-- src/app/* paginas publicas
-- src/app/admin/* paginas administrativas
-- src/app/api/public/* APIs para front publico
-- src/app/api/admin/* APIs protegidas para manutencao
+Tipos centrais (src/types/index.ts):
+- TipoDia: UTIL | SABADO | DOMINGO | FERIADO
+- Parada: id, nome, cidade
+- LinhaParada: parada_id, ordem, tempo_minutos
+- Horario: id, hora_saida, tipo, observacao?
+- Tarifa: origem_id, destino_id, valor
+- Linha: id, codigo, nome, slug, descricao?, ativa, paradas, horarios, tarifas
+- Aviso: id, titulo, conteudo, tipo, ativo
+- Database: paradas, linhas, avisos
 
-Protecao de rota admin:
-- src/middleware.ts
-
-==================================================
-5) FLUXO PUBLICO (PASSAGEIRO)
-==================================================
-
-Pagina Home (/):
-- Mostra avisos operacionais
-- Exibe busca rapida de horarios (ScheduleSearch)
-- Exibe resumo de linhas/frota/servicos
-
-Pagina Horarios (/horarios):
-- Usa o mesmo componente ScheduleSearch
-- UI focada em planejamento de viagem
-- Atalho para pagina de rodoviarias
-
-Componente central (ScheduleSearch):
-- Busca cidades via /api/public/paradas
-- Busca destinos validos via /api/public/destinos
-- Executa consulta via /api/public/busca
-- Exibe diretas e conexoes
-- Classifica horarios como passado/proximo/futuro em tempo real
-- Detecta automaticamente tipo de dia atual (inclui feriados nacionais)
-- Persiste estado no localStorage (origem, destino, tipo)
-
-Regra critica de UX/logica:
-- Se houver rota direta valida, a API nao retorna conexoes artificiais
 
 ==================================================
-6) PAGINAS PUBLICAS - DETALHAMENTO
+3) ARQUITETURA DO PROJETO
 ==================================================
 
-/ (home)
-- Comunicados
-- Busca inteligente
-- Frota
-- Linhas populares
-- Area do passageiro
-- Como usar o site
+Raiz:
+- data.json
+- next.config.ts
+- package.json
+- DOCUMENTACAO_COMPLETA.txt
+- README.md
 
-/horarios
-- Hero informativo
-- Busca inteligente
-- CTA para /rodoviarias
+Pastas principais:
+- public/
+  - imagens e assets estaticos
+  - data.json (gerado para modo estatico via script)
+- scripts/
+  - validate.js
+  - prepare-static.mjs
+  - build-pages.mjs
+- src/
+  - app/ (paginas e APIs)
+  - components/
+  - lib/
+  - types/
+- test/
 
-/linhas
-- Lista linhas ativas
-- Resumo: linhas, cidades e total de saidas
-- CTA para /rodoviarias
-
-/linhas/[slug]
-- Dados da linha (ida/volta quando aplicavel)
-- Horarios com observacoes
-- Paradas da rota
-- Tarifas de ida e volta
-- Exportacao PDF
-
-/tarifas
-- Politica de pagamento por canal
-- Tabela por linha e trecho
-
-/atendimento
-- Fluxo de servicos ao passageiro
-- Checklist e canais de contato
-
-/rodoviarias
-- Base de terminais da regiao
-- Dados com nivel de confianca
-- Fontes externas listadas por cidade
-
-/sobre
-- Informacoes institucionais e contatos
 
 ==================================================
-7) APIS PUBLICAS - CONTRATOS E FUNCAO
+4) PAGINAS PUBLICAS
 ==================================================
 
-GET /api/public/paradas
-- Retorna paradas/cidades usadas por linhas ativas
-- Remove duplicidade de cidade
+- / (Inicio)
+  - Avisos em destaque
+  - Busca principal (ScheduleSearch)
+  - Frota
+  - Linhas populares
+  - Area do passageiro
 
-GET /api/public/destinos?origem&tipo
-- Retorna destinos alcancaveis para origem no tipo de dia
-- Usa route-planner
+- /horarios
+  - Busca detalhada por origem/destino/tipo de dia
+  - Resultados diretos e com conexao
 
-GET /api/public/busca?origem&destino&tipo
-- Retorna:
-  - resultados[] (rotas diretas)
-  - conexoes[] (apenas se nao houver direto)
-- Ordena e prioriza embarques mais coerentes
+- /linhas
+  - Lista de linhas ativas
+  - Resumos operacionais
 
-GET /api/public/linhas
-- Lista linhas ativas com payload reduzido para listagem
+- /linhas/[slug]
+  - Detalhes da linha
+  - Horarios ida/volta
+  - Paradas
+  - Tarifas
+  - PDF (apenas na versao com servidor)
 
-GET /api/public/avisos
-- Default: notificacoes operacionais
-- grupo=informativos: informativos de cartoes
-- grupo=todos: ambos
+- /tarifas
+  - Informacoes tarifarias e meios de pagamento
 
-GET /api/public/pdf?linha_id&tipo
-- Gera PDF completo para consulta/impressao
-- Inclui ida/volta, observacoes, tarifas e rodape oficial
+- /atendimento
+  - Central de servicos ao passageiro
+  - Cartao com animacao 3D frente/verso
+
+- /sobre
+  - Historia, pilares, contatos
+  - Creditos de desenvolvimento
+
+- /rodoviarias
+  - Informacoes de terminais por cidade
+
 
 ==================================================
-8) PAINEL ADMINISTRATIVO
+5) COMPONENTES IMPORTANTES
 ==================================================
 
-Paginas:
-- /admin (dashboard)
-- /admin/avisos
-- /admin/paradas
-- /admin/linhas
-- /admin/linhas/[id]
-- /admin/login
+- src/components/public/Header.tsx
+  - Navegacao principal e branding
 
-APIs:
+- src/components/public/Footer.tsx
+  - Rodape institucional
+  - Creditos do desenvolvedor
+
+- src/components/public/ScheduleSearch.tsx
+  - Motor de busca no cliente
+  - Agora com dois modos:
+    - modo servidor: usa /api/public/*
+    - modo estatico: usa data local (public/data.json)
+
+- src/app/linhas/[slug]/LinhaDetailClient.tsx
+  - Tabs de horarios/paradas/tarifas
+  - PDF desativado no modo estatico (mensagem contextual)
+
+
+==================================================
+6) BIBLIOTECAS DE DOMINIO (src/lib)
+==================================================
+
+- db.ts
+  - Leitura de data.json no servidor
+
+- route-planner.ts
+  - Planejamento de conexoes (versao servidor)
+
+- public-search.ts
+  - Regras de busca para modo estatico/client-side
+  - Funcoes principais:
+    - getParadasPublicas(db)
+    - listarDestinosAlcancaveis(db, origem, tipo)
+    - buscarRotas(db, origem, destino, tipo)
+
+- municipios.ts
+  - Mapeamento de brasoes por municipio
+
+- rodoviarias-data.ts
+  - Base de rodoviarias
+
+
+==================================================
+7) API ROUTES (VERSAO COM SERVIDOR)
+==================================================
+
+Publicas:
+- GET /api/public/paradas
+- GET /api/public/destinos
+- GET /api/public/busca
+- GET /api/public/linhas
+- GET /api/public/avisos
+- GET /api/public/pdf
+
+Admin:
 - POST /api/admin/login
 - POST /api/admin/logout
 - GET /api/admin/data
 - POST /api/admin/data
 
-Autenticacao:
-- Cookie admin_session
-- Assinatura HMAC-SHA256 com ADMIN_SECRET
-- TTL de sessao: 7 dias
-- Rotas admin protegidas por middleware (exceto /admin/login)
+Observacao:
+- Essas rotas NAO existem em GitHub Pages (site estatico).
 
-Persistencia no admin:
-- Desenvolvimento: grava data.json diretamente
-- Producao/Vercel: nao grava arquivo local; retorna instrucoes para download e commit
 
 ==================================================
-9) REGRAS DE NEGOCIO IMPLEMENTADAS
+8) SEGURANCA E OPERACAO
 ==================================================
 
-- Tipos de dia aceitos: UTIL, SABADO, DOMINGO, FERIADO
-- Conexao exige tempo minimo entre trechos
-- Destinos do select dependem da origem e do tipo de dia
-- Busca direta prevalece sobre conexao
-- Horarios do front podem refletir estado temporal em tempo real
-- Estado de busca e compartilhado entre Home e Horarios
+Na versao com servidor:
+- Header de seguranca via next.config.ts
+- Login admin por cookie HttpOnly assinado
+
+Em GitHub Pages:
+- Nao ha runtime de servidor
+- Nao ha login admin funcional
+- Nao ha geracao de PDF por API
+
 
 ==================================================
-10) SEGURANCA - ANALISE
+9) DOCUMENTACAO DE CREDITOS
 ==================================================
 
-Controles presentes:
-- Rotas admin protegidas
-- Cookie HttpOnly
-- Sessao assinada
+Creditos adicionados em:
+- src/components/public/Footer.tsx
+- src/app/sobre/page.tsx
 
-Riscos identificados:
-- Sem rate limit no login
-- Sem bloqueio progressivo por tentativas
-- Senha em texto plano (sem hash)
-- Sem auditoria persistente de alteracoes (quem alterou o que)
+Autor creditado:
+- Victor Theodoro (vftheodoro)
+- https://vftheodoro.github.io/Portfolio/
 
-Recomendacoes:
-1. Adicionar rate limit em /api/admin/login.
-2. Migrar para hash de senha (bcrypt/argon2) e comparacao segura.
-3. Registrar historico de alteracoes do data.json.
-4. Migrar middleware para proxy conforme recomendacao do Next.
 
 ==================================================
-11) QUALIDADE, TESTES E VALIDACAO
+10) MODO ESTATICO PARA GITHUB PAGES
 ==================================================
 
-Testes atuais:
-- test/busca.test.ts
-  - validacao de parametros obrigatorios
-  - retorno de diretas
-  - retorno de conexoes quando nao ha direta
-  - supressao de conexoes quando ha direta
+Objetivo:
+- Publicar uma vitrine funcional e profissional em GitHub Pages
+- Manter visual e navegao do site atual
 
-- test/destinos.test.ts
-  - validacao de origem obrigatoria
-  - retorno de destinos alcancaveis
+Implementacoes feitas:
+- next.config.ts com modo condicional para Pages:
+  - output: export
+  - images.unoptimized: true
+  - basePath e assetPrefix por nome do repositorio
+- ScheduleSearch com modo estatico (NEXT_PUBLIC_STATIC_EXPORT=true)
+- Script para copiar data.json para public/data.json
+- Workflow de deploy automatico em .github/workflows/deploy-pages.yml
 
-- test/db.test.ts e test/validate.test.ts
-  - suporte de leitura/validacao de dados
+Scripts adicionados:
+- npm run prepare:static
+- npm run build:pages
 
-Script de validacao:
-- scripts/validate.js
-- valida estrutura, duplicidades, referencias de IDs, formato HH:MM, tipos e tarifas
+Fluxo local para validar Pages:
+1) npm run prepare:static
+2) npm run build:pages
+3) conferir pasta out/
 
-Pipeline recomendado antes de deploy:
-1) node scripts/validate.js
-2) npm run test
-3) npm run build
 
 ==================================================
-12) OPERACAO E DEPLOY
+11) DEPLOY NO GITHUB PAGES
 ==================================================
 
-Execucao local:
-- npm install
-- npm run dev
+Pre-requisitos:
+- Repositorio no GitHub com branch main
 
-Build:
+Passos:
+1) Commit e push das alteracoes
+2) No GitHub, abrir Settings > Pages
+3) Em Source, selecionar GitHub Actions
+4) Aguardar workflow "Deploy Next.js to GitHub Pages"
+5) URL final: https://SEU_USUARIO.github.io/Porto-de-Registro/
+
+
+==================================================
+12) LIMITACOES DA VERSAO ESTATICA
+==================================================
+
+- Sem backend/admin real no navegador
+- Sem /api/public/pdf
+- Sem persistencia de edicao de dados
+
+Mesmo assim, permanecem:
+- Visual profissional completo
+- Navegacao principal
+- Busca de horarios e conexoes usando data local
+- Paginas institucionais
+
+
+==================================================
+13) QUALIDADE E VERIFICACAO
+==================================================
+
+Comandos recomendados:
+- npm run test
 - npm run build
+- npm run build:pages
+- node scripts/validate.js
 
-Deploy principal:
-- Vercel
-
-Ponto operacional importante:
-- Como o projeto usa data.json, em ambiente serverless o fluxo de edicao em runtime
-  deve ser tratado por download do JSON atualizado e commit no repositorio.
 
 ==================================================
-13) ESTRUTURA RELEVANTE DE PASTAS
+14) PROXIMOS PASSOS RECOMENDADOS
 ==================================================
 
-- data.json
-- scripts/validate.js
-- src/app
-  - paginas publicas
-  - admin
-  - api/public
-  - api/admin
-- src/components
-  - public
-  - admin
-- src/lib
-  - db.ts
-  - auth-admin.ts
-  - route-planner.ts
-- src/types
-- test
+1) Continuar evolucao no GitHub Pages durante desenvolvimento de front.
+2) Migrar para Vercel quando precisar backend/admin/PDF em producao.
+3) Opcional: adicionar toggle visual indicando "Modo estatico" no header.
 
-==================================================
-14) ROADMAP SUGERIDO
-==================================================
 
-Curto prazo:
-- Rate limit no login admin
-- Hash de senha admin
-- Log de alteracoes administrativas
-
-Medio prazo:
-- Migrar persistencia para backend de dados real (ou CMS controlado)
-- Auditoria e trilha de alteracoes com usuario e timestamp
-- Expandir testes para APIs admin e PDF
-
-Longo prazo:
-- Observabilidade (metricas, erros, tempo de resposta)
-- Cache estrategico para endpoints publicos de leitura
-
-==================================================
-15) CONCLUSAO
-==================================================
-
-O site esta bem estruturado para o contexto atual e atende os fluxos centrais do negocio.
-A experiencia do passageiro esta robusta, principalmente no modulo de horarios.
-A principal oportunidade de evolucao esta na seguranca do login admin e na estrategia
- de persistencia para producao serverless.
+Fim da documentacao.

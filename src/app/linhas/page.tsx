@@ -73,7 +73,7 @@ export default async function LinhasPage() {
             <p className="section__subtitle">
               Consulta clara e equilibrada das rotas ativas no Vale do Ribeira
             </p>
-            <p style={{ marginTop: '0.75rem' }}>
+            <p className="linhas-page__cta-wrap">
               <Link href="/rodoviarias" className="btn btn--secondary btn--sm">
                 Ver rodoviarias por municipio
               </Link>

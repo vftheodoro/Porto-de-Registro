@@ -5,11 +5,13 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
+    "build:pages": "npm run prepare:static && node scripts/build-pages.mjs",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "db:seed": "tsx scripts/seed.ts"
+    "db:seed": "tsx scripts/seed.ts",
+    "prepare:static": "node scripts/prepare-static.mjs"
   },
   "dependencies": {
     "date-fns": "^4.1.0",

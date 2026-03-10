@@ -7,6 +7,8 @@ import {
 } from '@/lib/auth-admin';
 import { getClientIp, hitRateLimit, isSameOriginRequest, noStoreHeaders } from '@/lib/security';
 
+export const dynamic = 'force-static';
+
 export async function POST(request: Request) {
   try {
     if (!isSameOriginRequest(request)) {

@@ -3,6 +3,8 @@ import { getDb } from '@/lib/db';
 import type { LinhaParadaComDetalhes, ResultadoBusca, TipoDia } from '@/types';
 import { planejarConexoes } from '@/lib/route-planner';
 
+export const dynamic = 'force-static';
+
 export async function GET(request: Request) {
   try {
     const db = getDb();

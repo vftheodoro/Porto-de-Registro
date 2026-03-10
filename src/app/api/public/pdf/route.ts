@@ -7,7 +7,7 @@ import fs from 'fs';
 import path from 'path';
 import { getBrasaoMunicipio } from '@/lib/municipios';
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-static';
 
 function paradasOrdenadas(linha: { paradas: Array<{ ordem: number; parada_id: number }> }) {
   return [...linha.paradas].sort((a, b) => a.ordem - b.ordem);
