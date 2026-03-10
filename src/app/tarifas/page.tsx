@@ -43,11 +43,15 @@ export default async function TarifasPage() {
 
       <section className="section tarifas-page">
         <div className="container">
-          <div className="section__header">
+          <div className="section__header tarifas-hero">
             <h1 className="section__title">Tarifas e Preços</h1>
             <p className="section__subtitle">
               Consulte os valores por trecho e as formas de pagamento aceitas
             </p>
+            <div className="tarifas-hero__chips" aria-label="Informacoes de pagamento">
+              <span className="badge badge--dourado">Terminal: Pix, cartao e dinheiro</span>
+              <span className="badge badge--cinza">Onibus fora da rodoviaria: somente dinheiro</span>
+            </div>
           </div>
 
           <section className="pagamento-policy" aria-label="Formas de pagamento">
@@ -83,34 +87,37 @@ export default async function TarifasPage() {
             {linhasComTarifas.map((linha) => (
               <div key={linha.id} className="results tarifas-list__item">
                 <div className="results__header">
-                  <div>
+                  <div className="tarifas-line-head">
                     <div className="results__title">{linha.nome}</div>
+                    <p className="tarifas-line-head__subtitle">Valores oficiais por trecho cadastrado</p>
                   </div>
                   <span className="badge badge--verde">{linha.codigo}</span>
                 </div>
 
-                <table className="fare-table">
-                  <thead>
-                    <tr>
-                      <th>Origem</th>
-                      <th>Destino</th>
-                      <th style={{ textAlign: 'right' }}>Tarifa</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {linha.tarifasDetalhes.map((t, idx) => (
-                      <tr key={idx}>
-                        <td>{t.origem_nome}</td>
-                        <td>{t.destino_nome}</td>
-                        <td style={{ textAlign: 'right' }}>
-                          <span className="fare-table__value">
-                            R$ {t.valor.toFixed(2)}
-                          </span>
-                        </td>
+                <div className="tarifas-table-wrap">
+                  <table className="fare-table">
+                    <thead>
+                      <tr>
+                        <th>Origem</th>
+                        <th>Destino</th>
+                        <th style={{ textAlign: 'right' }}>Tarifa</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {linha.tarifasDetalhes.map((t, idx) => (
+                        <tr key={idx}>
+                          <td>{t.origem_nome}</td>
+                          <td>{t.destino_nome}</td>
+                          <td style={{ textAlign: 'right' }}>
+                            <span className="fare-table__value">
+                              R$ {t.valor.toFixed(2)}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             ))}
             

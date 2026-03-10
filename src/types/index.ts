@@ -119,8 +119,5 @@ export interface RodoviariaInfo {
   nome: string;
   endereco: string;
   telefone: string;
-  funcionamento: string;
-  observacoes: string;
-  nivel_confianca: 'alto' | 'medio' | 'baixo';
-  fontes: RodoviariaFonte[];
+  maps_url: string;
 }

@@ -2,21 +2,17 @@ import Header from '@/components/public/Header';
 import Footer from '@/components/public/Footer';
 import type { Metadata } from 'next';
 import { RODOVIARIAS_VALE_RIBEIRA } from '@/lib/rodoviarias-data';
-import { MapPin, Phone, Clock3, ShieldCheck, ExternalLink } from 'lucide-react';
+import { MapPin, Phone, ExternalLink, Navigation } from 'lucide-react';
+import Image from 'next/image';
+import { getBrasaoMunicipio } from '@/lib/municipios';
 
 export const metadata: Metadata = {
   title: 'Rodoviarias do Vale do Ribeira | Porto de Registro',
   description:
-    'Consulte endereco, telefone e orientacoes das rodoviarias atendidas pela Porto de Registro.',
+    'Consulte rodoviarias por cidade e abra a localizacao direto no Google Maps.',
 };
 
 export const revalidate = 60;
-
-const confiancaLabel = {
-  alto: 'Dados com boa confianca',
-  medio: 'Dados com confianca moderada',
-  baixo: 'Dados pendentes de confirmacao',
-} as const;
 
 export default function RodoviariasPage() {
   return (
@@ -25,26 +21,35 @@ export default function RodoviariasPage() {
 
       <section className="section rodoviarias-page">
         <div className="container">
-          <div className="section__header">
+          <div className="rodoviarias-hero">
             <h1 className="section__title">Rodoviarias do Vale do Ribeira</h1>
             <p className="section__subtitle">
-              Base de consulta para o passageiro: endereco, contato e orientacoes uteis.
-              Clique em cada cidade para ver os detalhes e fontes.
+              Escolha o municipio e abra a localizacao da rodoviaria direto no Google Maps.
             </p>
           </div>
 
           <div className="rodoviarias-grid">
             {RODOVIARIAS_VALE_RIBEIRA.map((rod) => (
-              <details key={rod.cidade} className="rod-card">
-                <summary className="rod-card__summary">
+              <article key={rod.cidade} className="rod-card">
+                <div className="rod-card__header">
+                  {getBrasaoMunicipio(rod.cidade) ? (
+                    <Image
+                      src={getBrasaoMunicipio(rod.cidade) as string}
+                      alt={`Brasao de ${rod.cidade}`}
+                      width={52}
+                      height={52}
+                      className="rod-card__brasao"
+                    />
+                  ) : (
+                    <div className="rod-card__brasao-placeholder">
+                      {rod.cidade.slice(0, 2).toUpperCase()}
+                    </div>
+                  )}
                   <div>
-                    <h2 className="rod-card__title">{rod.nome}</h2>
-                    <p className="rod-card__city">{rod.cidade} - SP</p>
+                    <h2 className="rod-card__title">{rod.cidade}</h2>
+                    <p className="rod-card__city">{rod.nome}</p>
                   </div>
-                  <span className={`rod-card__badge rod-card__badge--${rod.nivel_confianca}`}>
-                    {confiancaLabel[rod.nivel_confianca]}
-                  </span>
-                </summary>
+                </div>
 
                 <div className="rod-card__body">
                   <div className="rod-card__line">
@@ -55,29 +60,16 @@ export default function RodoviariasPage() {
                     <Phone size={16} />
                     <span>{rod.telefone}</span>
                   </div>
-                  <div className="rod-card__line">
-                    <Clock3 size={16} />
-                    <span>{rod.funcionamento}</span>
-                  </div>
-                  <div className="rod-card__line">
-                    <ShieldCheck size={16} />
-                    <span>{rod.observacoes}</span>
-                  </div>
 
-                  <div className="rod-card__sources">
-                    <h3>Fontes consultadas</h3>
-                    <ul>
-                      {rod.fontes.map((f) => (
-                        <li key={f.url}>
-                          <a href={f.url} target="_blank" rel="noopener noreferrer">
-                            {f.label} <ExternalLink size={14} />
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="rod-card__actions">
+                    <a href={rod.maps_url} target="_blank" rel="noopener noreferrer" className="rod-card__map-btn">
+                      <Navigation size={15} />
+                      Ver localizacao no Google Maps
+                      <ExternalLink size={14} />
+                    </a>
                   </div>
                 </div>
-              </details>
+              </article>
             ))}
           </div>
         </div>

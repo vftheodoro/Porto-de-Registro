@@ -5,6 +5,7 @@ import autoTable from 'jspdf-autotable';
 import type { TipoDia, Linha } from '@/types';
 import fs from 'fs';
 import path from 'path';
+import { getBrasaoMunicipio } from '@/lib/municipios';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,11 +43,45 @@ function routeLabel(linha: Linha, db: ReturnType<typeof getDb>): string {
   return `${origem} -> ${destino}`;
 }
 
+function routeEnds(linha: Linha, db: ReturnType<typeof getDb>) {
+  const paradas = paradasOrdenadas(linha);
+  const origem = db.paradas.find((p) => p.id === paradas[0]?.parada_id)?.cidade || 'Origem';
+  const destino = db.paradas.find((p) => p.id === paradas[paradas.length - 1]?.parada_id)?.cidade || 'Destino';
+  return { origem, destino };
+}
+
 function getLogoDataUrl(): string | null {
   try {
     const logoPath = path.join(process.cwd(), 'public', 'images', 'logos', 'logo_completa_pr.png');
     const logoBuffer = fs.readFileSync(logoPath);
     return `data:image/png;base64,${logoBuffer.toString('base64')}`;
+  } catch {
+    return null;
+  }
+}
+
+function getPublicImageData(publicPath: string | null): { dataUrl: string; format: 'PNG' | 'JPEG' } | null {
+  if (!publicPath) return null;
+
+  try {
+    const normalized = publicPath.startsWith('/') ? publicPath.slice(1) : publicPath;
+    const imagePath = path.join(process.cwd(), 'public', normalized);
+    const imageBuffer = fs.readFileSync(imagePath);
+    const ext = path.extname(normalized).toLowerCase();
+    if (ext === '.jpg' || ext === '.jpeg') {
+      return {
+        dataUrl: `data:image/jpeg;base64,${imageBuffer.toString('base64')}`,
+        format: 'JPEG',
+      };
+    }
+    if (ext === '.png') {
+      return {
+        dataUrl: `data:image/png;base64,${imageBuffer.toString('base64')}`,
+        format: 'PNG',
+      };
+    }
+    // Mantem robustez do PDF: ignora formatos sem suporte garantido no jsPDF.
+    return null;
   } catch {
     return null;
   }
@@ -109,6 +144,9 @@ export async function GET(request: Request) {
     const linhaVolta = findLinhaVolta(db, linha);
     const tempoIda = tempoTotalLinha(linha);
     const tempoVolta = linhaVolta ? tempoTotalLinha(linhaVolta) : 0;
+    const { origem, destino } = routeEnds(linha, db);
+    const brasaoOrigem = getPublicImageData(getBrasaoMunicipio(origem));
+    const brasaoDestino = getPublicImageData(getBrasaoMunicipio(destino));
 
     const horariosIda = linha.horarios
        .filter(h => h.tipo === tipo)
@@ -184,26 +222,59 @@ export async function GET(request: Request) {
     doc.text('Documento pronto para impressão e fixação em pontos de consulta', largura - 14, 32, { align: 'right' });
 
     // Bloco resumo
+    const resumoTop = 42;
+    const resumoHeight = 36;
     doc.setDrawColor(198, 222, 202);
     doc.setFillColor(245, 251, 246);
-    doc.roundedRect(14, 42, 182, 32, 3, 3, 'FD');
+    doc.roundedRect(14, resumoTop, 182, resumoHeight, 3, 3, 'FD');
 
     doc.setFontSize(10);
     doc.setTextColor(80, 80, 80);
     doc.text('Linha principal', 18, 49);
     doc.text('Tempo estimado', 90, 49);
-    doc.text('Faixa de tarifa', 150, 49);
+    doc.text('Faixa de tarifa', 148, 49);
 
     doc.setFontSize(12);
     doc.setTextColor(20, 71, 30);
     doc.text(routeLabel(linha, db), 18, 57);
     doc.text(`${tempoIda} min`, 90, 57);
-    doc.text(minMaxTarifa(linha.tarifas), 150, 57);
+    doc.text(minMaxTarifa(linha.tarifas), 148, 57);
 
     doc.setFontSize(9);
     doc.setTextColor(110, 110, 110);
-    doc.text(`Código ${linha.codigo}${linhaVolta ? ` • Volta associada ${linhaVolta.codigo}` : ''}`, 18, 64);
-    doc.text(linhaVolta ? routeLabel(linhaVolta, db) : 'Linha sem retorno associado cadastrado', 18, 69);
+    const linhaApoio = linhaVolta
+      ? `Codigo ${linha.codigo} • Volta associada ${linhaVolta.codigo}`
+      : `Codigo ${linha.codigo} • Linha sem retorno associado cadastrado`;
+    doc.text(linhaApoio, 18, 66);
+
+    let tableStartY = 84;
+    const temBrasao = Boolean(brasaoOrigem || brasaoDestino);
+
+    if (temBrasao) {
+      const brasaoY = 71;
+
+      if (brasaoOrigem) {
+        doc.setDrawColor(210, 220, 210);
+        doc.setFillColor(255, 255, 255);
+        doc.circle(22, brasaoY + 3, 5.5, 'FD');
+        doc.addImage(brasaoOrigem.dataUrl, brasaoOrigem.format, 18.3, brasaoY - 0.7, 7.4, 7.4);
+        doc.setFontSize(8);
+        doc.setTextColor(90, 90, 90);
+        doc.text(origem, 30, brasaoY + 4);
+      }
+
+      if (brasaoDestino) {
+        doc.setDrawColor(210, 220, 210);
+        doc.setFillColor(255, 255, 255);
+        doc.circle(74, brasaoY + 3, 5.5, 'FD');
+        doc.addImage(brasaoDestino.dataUrl, brasaoDestino.format, 70.3, brasaoY - 0.7, 7.4, 7.4);
+        doc.setFontSize(8);
+        doc.setTextColor(90, 90, 90);
+        doc.text(destino, 82, brasaoY + 4);
+      }
+
+      tableStartY = 88;
+    }
 
     // Tabela principal de horários
     const maxRows = Math.max(horariosIda.length, horariosVolta.length, 1);
@@ -224,7 +295,7 @@ export async function GET(request: Request) {
     });
 
     autoTable(doc, {
-      startY: 80,
+      startY: tableStartY,
       margin: { left: 14, right: 14 },
       head: linhaVolta
         ? [[
@@ -329,7 +400,11 @@ export async function GET(request: Request) {
 
     doc.setFontSize(9);
     doc.setTextColor(90, 90, 90);
-    doc.text('Pagamento: na rodoviária aceitamos Pix, cartão e dinheiro. No ônibus fora da rodoviária, somente dinheiro físico.', 14, Math.min(finalY + 10, 280));
+    const pagamento = doc.splitTextToSize(
+      'Pagamento: na rodoviaria aceitamos Pix, cartao e dinheiro. No onibus fora da rodoviaria, somente dinheiro fisico.',
+      182
+    );
+    doc.text(pagamento, 14, Math.min(finalY + 10, 280));
 
     addFooter(doc);
 

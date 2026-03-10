@@ -8,6 +8,17 @@ const TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 const DEV_FALLBACK_PASSWORD = 'admin';
 const DEV_FALLBACK_SECRET = 'dev-admin-secret-32chars-fallback';
 
+function timingSafeEqualString(a: string, b: string): boolean {
+  const max = Math.max(a.length, b.length);
+  let mismatch = a.length ^ b.length;
+  for (let i = 0; i < max; i += 1) {
+    const ca = i < a.length ? a.charCodeAt(i) : 0;
+    const cb = i < b.length ? b.charCodeAt(i) : 0;
+    mismatch |= ca ^ cb;
+  }
+  return mismatch === 0;
+}
+
 function isDevMode(): boolean {
   return process.env.NODE_ENV !== 'production';
 }
@@ -67,7 +78,7 @@ export async function verifyAdminSession(cookieValue: string | null): Promise<bo
   if (parts.length !== 2) return false;
   const [payload, signature] = parts;
   const expected = await hmacSha256(secret, payload);
-  if (expected !== signature) return false;
+  if (!timingSafeEqualString(expected, signature)) return false;
   const t = parseInt(payload, 10);
   if (Number.isNaN(t)) return false;
   if (Date.now() - t > TTL_MS) return false;
@@ -82,6 +93,10 @@ export function getAdminPassword(): string | null {
     return DEV_FALLBACK_PASSWORD;
   }
   return null;
+}
+
+export function verifyAdminPassword(given: string, expected: string): boolean {
+  return timingSafeEqualString(given, expected);
 }
 
 export function isAdminConfigured(): boolean {

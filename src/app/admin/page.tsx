@@ -53,6 +53,11 @@ export default async function AdminDashboardPage() {
           Em desenvolvimento as alterações são salvas direto no arquivo. Em produção (Vercel), use o botão abaixo para baixar o JSON atualizado e faça commit no GitHub.
         </p>
         <DownloadJsonButton />
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.9rem' }}>
+          <Link href="/" className="btn btn--secondary btn--sm">Ver site publico</Link>
+          <Link href="/horarios" className="btn btn--secondary btn--sm">Validar busca de horarios</Link>
+          <Link href="/rodoviarias" className="btn btn--secondary btn--sm">Validar links de rodoviarias</Link>
+        </div>
       </div>
     </>
   );

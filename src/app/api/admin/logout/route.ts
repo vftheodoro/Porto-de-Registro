@@ -1,12 +1,17 @@
 import { NextResponse } from 'next/server';
 import { getAdminCookieName } from '@/lib/auth-admin';
+import { isSameOriginRequest, noStoreHeaders } from '@/lib/security';
 
-export async function POST() {
-  const res = NextResponse.json({ ok: true });
+export async function POST(request: Request) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json({ error: 'Origem da requisicao invalida' }, { status: 403, headers: noStoreHeaders() });
+  }
+
+  const res = NextResponse.json({ ok: true }, { headers: noStoreHeaders() });
   res.cookies.set(getAdminCookieName(), '', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    sameSite: 'strict',
     maxAge: 0,
     path: '/',
   });

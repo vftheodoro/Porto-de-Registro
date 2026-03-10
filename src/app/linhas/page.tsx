@@ -7,6 +7,8 @@ import type { LinhaCompleta } from '@/types';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { MapPin, BusFront, CalendarDays, Route } from 'lucide-react';
+import Image from 'next/image';
+import { getBrasaoMunicipio } from '@/lib/municipios';
 
 export const metadata: Metadata = {
   title: 'Linhas de Ônibus | Porto de Registro',
@@ -38,6 +40,22 @@ export default async function LinhasPage() {
      } as LinhaCompleta;
   }).sort((a, b) => a.codigo.localeCompare(b.codigo));
 
+  const linhasComMunicipios = linhas.map((linha) => {
+    const paradasDaLinha = [...db.linhas.find((l) => l.id === linha.id)?.paradas || []].sort((a, b) => a.ordem - b.ordem);
+    const origemId = paradasDaLinha[0]?.parada_id;
+    const destinoId = paradasDaLinha[paradasDaLinha.length - 1]?.parada_id;
+    const origemCidade = db.paradas.find((p) => p.id === origemId)?.cidade || 'Origem';
+    const destinoCidade = db.paradas.find((p) => p.id === destinoId)?.cidade || 'Destino';
+
+    return {
+      ...linha,
+      origemCidade,
+      destinoCidade,
+      brasaoOrigem: getBrasaoMunicipio(origemCidade),
+      brasaoDestino: getBrasaoMunicipio(destinoCidade),
+    };
+  });
+
   const totalSaidas = linhas.reduce(
     (acc, linha) => acc + linha.qtd_util + linha.qtd_sabado + linha.qtd_domingo,
     0
@@ -57,7 +75,7 @@ export default async function LinhasPage() {
             </p>
             <p style={{ marginTop: '0.75rem' }}>
               <Link href="/rodoviarias" className="btn btn--secondary btn--sm">
-                Consultar rodoviarias e contatos
+                Ver rodoviarias por municipio
               </Link>
             </p>
           </div>
@@ -87,7 +105,7 @@ export default async function LinhasPage() {
           </div>
 
           <div className="routes-grid">
-            {linhas.map((linha) => (
+            {linhasComMunicipios.map((linha) => (
               <Link
                 key={linha.id}
                 href={`/linhas/${linha.slug}`}
@@ -97,6 +115,37 @@ export default async function LinhasPage() {
                 <div className="route-card__name">{linha.nome}</div>
                 <div className="route-card__cities route-card__cities--icon">
                   <MapPin size={16} /> {linha.cidades.split(', ').join(' → ')}
+                </div>
+                <div className="route-card__municipios" aria-label="Municípios da linha">
+                  <div className="route-card__municipio-item">
+                    {linha.brasaoOrigem ? (
+                      <Image
+                        src={linha.brasaoOrigem}
+                        alt={`Brasão de ${linha.origemCidade}`}
+                        width={28}
+                        height={28}
+                        className="route-card__brasao"
+                      />
+                    ) : (
+                      <span className="route-card__brasao-placeholder">{linha.origemCidade.slice(0, 2).toUpperCase()}</span>
+                    )}
+                    <span>{linha.origemCidade}</span>
+                  </div>
+                  <span className="route-card__municipio-sep">→</span>
+                  <div className="route-card__municipio-item">
+                    {linha.brasaoDestino ? (
+                      <Image
+                        src={linha.brasaoDestino}
+                        alt={`Brasão de ${linha.destinoCidade}`}
+                        width={28}
+                        height={28}
+                        className="route-card__brasao"
+                      />
+                    ) : (
+                      <span className="route-card__brasao-placeholder">{linha.destinoCidade.slice(0, 2).toUpperCase()}</span>
+                    )}
+                    <span>{linha.destinoCidade}</span>
+                  </div>
                 </div>
                 {linha.descricao && (
                   <p className="route-card__description">

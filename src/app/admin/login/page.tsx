@@ -8,7 +8,8 @@ import { Lock, AlertCircle } from 'lucide-react';
 function AdminLoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const from = searchParams.get('from') || '/admin';
+  const fromRaw = searchParams.get('from') || '/admin';
+  const from = fromRaw.startsWith('/admin') ? fromRaw : '/admin';
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);

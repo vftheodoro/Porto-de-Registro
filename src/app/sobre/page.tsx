@@ -16,38 +16,31 @@ export default function SobrePage() {
       <Header />
 
       {/* Hero Section */}
-      <section style={{ 
-        position: 'relative',
-        background: 'linear-gradient(135deg, var(--verde-800) 0%, var(--verde-600) 100%)', 
-        color: 'white', 
-        padding: '5rem 0 6rem 0', 
-        textAlign: 'center',
-        overflow: 'hidden'
-      }}>
+      <section className="sobre-hero">
         {/* Decorative Element */}
-        <div style={{ position: 'absolute', top: '-10%', right: '-5%', opacity: 0.05, transform: 'rotate(-15deg)' }}>
+        <div className="sobre-hero__shape">
           <BusFront size={400} />
         </div>
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.1)', padding: '0.5rem 1rem', borderRadius: 'var(--raio-full)', marginBottom: '1.5rem', fontSize: 'var(--texto-sm)', fontWeight: 600, letterSpacing: '1px', textTransform: 'uppercase' }}>
+        <div className="container sobre-hero__inner">
+          <div className="sobre-hero__kicker">
             <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--dourado-400)' }}></span>
             Tradição & Confiança
           </div>
-          <h1 style={{ fontSize: 'var(--texto-4xl)', fontFamily: 'var(--fonte-titulo)', marginBottom: '1rem', fontWeight: 800 }}>
+          <h1 className="sobre-hero__title">
             Conheça a Porto de Registro
           </h1>
-          <p style={{ fontSize: 'var(--texto-xl)', color: 'var(--branco)', opacity: 0.9, maxWidth: 650, margin: '0 auto', lineHeight: 1.6 }}>
+          <p className="sobre-hero__subtitle">
             Movimentando o Vale do Ribeira com segurança rigorosa, pontualidade britânica e imenso respeito pelos passageiros.
           </p>
         </div>
       </section>
 
       {/* Content */}
-      <section style={{ padding: '0 0 var(--esp-12) 0', marginTop: '-3rem', position: 'relative', zIndex: 10 }}>
+      <section className="sobre-content-shell">
         <div className="container" style={{ maxWidth: 900 }}>
           
           {/* Main History Card */}
-          <div className="card" style={{ padding: '3rem', marginBottom: '2.5rem', boxShadow: 'var(--sombra-lg)', border: 'none' }}>
+          <div className="card sobre-history-card" style={{ padding: '3rem', marginBottom: '2.5rem', border: 'none' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
               <div style={{ width: 48, height: 48, background: 'var(--verde-50)', borderRadius: 'var(--raio-md)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--verde-600)' }}>
                 <Clock size={24} />
@@ -69,7 +62,7 @@ export default function SobrePage() {
 
           {/* Values Grid */}
           <h2 style={{ color: 'var(--cinza-900)', fontSize: 'var(--texto-xl)', marginBottom: '1.5rem', textAlign: 'center' }}>Nossos Pilares</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
+          <div className="sobre-values-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
             <div style={{ background: 'white', padding: '2rem', borderRadius: 'var(--raio-xl)', border: '1px solid var(--cinza-200)', transition: 'transform var(--transicao-normal), box-shadow var(--transicao-normal)' }} className="hover-scale">
               <div style={{ width: 60, height: 60, background: 'var(--verde-50)', borderRadius: 'var(--raio-full)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', color: 'var(--verde-600)' }}>
                 <ShieldCheck size={32} />
@@ -123,7 +116,7 @@ export default function SobrePage() {
             <p style={{ color: 'var(--cinza-600)' }}>Canais de comunicação para dúvidas, sugestões e informações.</p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '1.5rem' }}>
+          <div className="sobre-contacts-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '1.5rem' }}>
             {/* Contato Operacional - Porto de Registro */}
             <div style={{ background: 'white', borderRadius: 'var(--raio-xl)', border: '1px solid var(--cinza-200)', overflow: 'hidden' }}>
               <div style={{ background: 'var(--verde-50)', padding: '1.5rem', borderBottom: '1px solid var(--verde-100)' }}>
@@ -215,6 +208,18 @@ export default function SobrePage() {
               </div>
             </div>
 
+          </div>
+
+          <div className="sobre-creditos">
+            <strong>Créditos do desenvolvimento:</strong> site desenvolvido por{' '}
+            <a
+              href="https://vftheodoro.github.io/Portfolio/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Victor Theodoro (vftheodoro)
+            </a>
+            .
           </div>
         </div>
       </section>

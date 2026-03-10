@@ -59,21 +59,27 @@ export default async function AtendimentoPage() {
             <div className="atendimento-card-spotlight">
               <div className="atendimento-card-spotlight__label">Porto card - frente e verso</div>
               <div className="atendimento-card-spotlight__gallery">
-                <Image
-                  src="/images/cartao_onibus_frente.png"
-                  alt="Porto card frente"
-                  width={360}
-                  height={220}
-                  className="atendimento-card-spotlight__image"
-                  priority
-                />
-                <Image
-                  src="/images/cartao_onibus_verso_informacoes_passageiro.png"
-                  alt="Porto card verso"
-                  width={360}
-                  height={220}
-                  className="atendimento-card-spotlight__image"
-                />
+                <div className="atendimento-card-3d" aria-hidden="true">
+                  <div className="atendimento-card-3d__face atendimento-card-3d__face--front">
+                    <Image
+                      src="/images/cartao_onibus_frente.png"
+                      alt="Porto card frente"
+                      width={360}
+                      height={220}
+                      className="atendimento-card-spotlight__image"
+                      priority
+                    />
+                  </div>
+                  <div className="atendimento-card-3d__face atendimento-card-3d__face--back">
+                    <Image
+                      src="/images/cartao_onibus_verso_informacoes_passageiro.png"
+                      alt="Porto card verso"
+                      width={360}
+                      height={220}
+                      className="atendimento-card-spotlight__image"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

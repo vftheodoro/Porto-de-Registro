@@ -441,7 +441,6 @@ export default function ScheduleSearch() {
                     </div>
                     <span className="badge badge--verde">{r.linha.codigo}</span>
                   </div>
-
                   <table className="schedule-table">
                     <thead>
                       <tr>
@@ -539,7 +538,6 @@ export default function ScheduleSearch() {
                           </span>
                         </div>
                       </div>
-
                       <div className="connection-card__legs">
                         {rota.trechos.map((trecho, idx) => (
                           <div key={`${rota.id}-${idx}`} className="connection-leg">

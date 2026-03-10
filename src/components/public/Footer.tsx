@@ -44,7 +44,6 @@ export default function Footer() {
               <li><Link href="/" className="footer__link">Início</Link></li>
               <li><Link href="/horarios" className="footer__link">Horários</Link></li>
               <li><Link href="/atendimento" className="footer__link">Atendimento</Link></li>
-              <li><Link href="/rodoviarias" className="footer__link">Rodoviárias</Link></li>
               <li><Link href="/linhas" className="footer__link">Linhas</Link></li>
               <li><Link href="/tarifas" className="footer__link">Tarifas</Link></li>
               <li><Link href="/sobre" className="footer__link">Sobre</Link></li>
@@ -69,6 +68,18 @@ export default function Footer() {
 
         <div className="footer__bottom">
           <p>© {new Date().getFullYear()} Porto de Registro Transportes Ltda. CNPJ: 21.966.029/0001-00. Todos os direitos reservados.</p>
+          <p className="footer__credits">
+            Desenvolvimento do site por{' '}
+            <a
+              href="https://vftheodoro.github.io/Portfolio/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer__credits-link"
+            >
+              Victor Theodoro (vftheodoro)
+            </a>
+            .
+          </p>
         </div>
       </div>
     </footer>
