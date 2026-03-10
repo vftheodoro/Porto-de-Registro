@@ -46,4 +46,32 @@ describe('API GET /api/public/busca', () => {
       expect(Array.isArray(r.horarios)).toBe(true);
     }
   });
+
+  it('returns connection options when no direct line exists', async () => {
+    const req = new Request(
+      'http://localhost/api/public/busca?origem=Jacupiranga&destino=Sete Barras&tipo=UTIL'
+    );
+    const res = await GET(req);
+    const json = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(Array.isArray(json.resultados)).toBe(true);
+    expect(Array.isArray(json.conexoes)).toBe(true);
+    expect(json.conexoes.length).toBeGreaterThan(0);
+    expect(json.conexoes[0]).toHaveProperty('trechos');
+  });
+
+  it('does not return connections when direct options exist', async () => {
+    const req = new Request(
+      'http://localhost/api/public/busca?origem=Jacupiranga&destino=Registro&tipo=UTIL'
+    );
+    const res = await GET(req);
+    const json = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(Array.isArray(json.resultados)).toBe(true);
+    expect(json.resultados.length).toBeGreaterThan(0);
+    expect(Array.isArray(json.conexoes)).toBe(true);
+    expect(json.conexoes.length).toBe(0);
+  });
 });

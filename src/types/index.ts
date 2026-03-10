@@ -82,3 +82,29 @@ export interface ResultadoBusca {
   tarifa: number | null;
   tempo_estimado: number | null;
 }
+
+export interface TrechoConexaoBusca {
+  linha: Omit<Linha, 'paradas' | 'horarios' | 'tarifas'>;
+  origem: string;
+  destino: string;
+  saida: string;
+  chegada: string;
+  duracao_min: number;
+  tarifa: number | null;
+}
+
+export interface RotaConexaoBusca {
+  id: string;
+  conexao_em: string;
+  saida_total: string;
+  chegada_total: string;
+  duracao_total_min: number;
+  tempo_espera_min: number;
+  tarifa_total: number | null;
+  trechos: [TrechoConexaoBusca, TrechoConexaoBusca];
+}
+
+export interface BuscaResponse {
+  resultados: ResultadoBusca[];
+  conexoes?: RotaConexaoBusca[];
+}

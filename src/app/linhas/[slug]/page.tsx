@@ -2,7 +2,7 @@ import Header from '@/components/public/Header';
 import Footer from '@/components/public/Footer';
 import { getDb } from '@/lib/db';
 import { notFound } from 'next/navigation';
-import type { Linha, LinhaParadaComDetalhes, TarifaComDetalhes } from '@/types';
+import type { LinhaParadaComDetalhes, TarifaComDetalhes } from '@/types';
 import type { Metadata } from 'next';
 import LinhaDetailClient from './LinhaDetailClient';
 

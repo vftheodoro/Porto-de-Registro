@@ -10,7 +10,7 @@ export default function Footer() {
           <div>
             <div className="footer__brand" style={{ marginBottom: '1rem' }}>
               <Image 
-                src="/images/logo_porto_branca.png" 
+                src="/images/logos/logo_porto_branca.png" 
                 alt="Porto de Registro" 
                 width={60} 
                 height={60} 
@@ -28,7 +28,7 @@ export default function Footer() {
                </div>
                <a href="https://www.rapidoperus.com.br/" target="_blank" rel="noopener noreferrer" style={{ display: 'block', transition: 'opacity var(--transicao-rapida)' }} className="hover-opacity">
                  <Image 
-                   src="/images/logo_rapido_perus.png" 
+                   src="/images/logos/logo_rapido_perus.png" 
                    alt="Grupo Rápido Perus" 
                    width={120} 
                    height={30} 
@@ -43,6 +43,7 @@ export default function Footer() {
             <ul className="footer__links">
               <li><Link href="/" className="footer__link">Início</Link></li>
               <li><Link href="/horarios" className="footer__link">Horários</Link></li>
+              <li><Link href="/atendimento" className="footer__link">Atendimento</Link></li>
               <li><Link href="/linhas" className="footer__link">Linhas</Link></li>
               <li><Link href="/tarifas" className="footer__link">Tarifas</Link></li>
               <li><Link href="/sobre" className="footer__link">Sobre</Link></li>

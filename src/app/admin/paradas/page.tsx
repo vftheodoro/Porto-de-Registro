@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import type { Database, Parada } from '@/types';
-import { MapPin, Plus, Pencil, Trash2, Save, AlertCircle } from 'lucide-react';
+import { Plus, Pencil, Trash2, Save, AlertCircle } from 'lucide-react';
 
 export default function AdminParadasPage() {
   const [db, setDb] = useState<Database | null>(null);

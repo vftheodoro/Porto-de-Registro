@@ -13,16 +13,22 @@ export default function HorariosPage() {
     <>
       <Header />
 
-      <section className="section" style={{ minHeight: 'calc(100vh - 400px)' }}>
+      <section className="horarios-hero">
         <div className="container">
-          <div className="section__header">
-            <h1 className="section__title">Busca de Horários</h1>
-            <p className="section__subtitle">
-              Siga os passos abaixo para encontrar o ônibus ideal para sua viagem
+          <div className="horarios-hero__header">
+            <h1 className="horarios-hero__title">Busca Inteligente de Horarios</h1>
+            <p className="horarios-hero__subtitle">
+              O sistema sugere apenas destinos realmente alcancaveis e, quando nao houver linha direta,
+              monta opcoes com conexao respeitando os horarios do dia.
             </p>
+            <div className="horarios-hero__badges">
+              <span className="badge badge--dourado">Direto + Conexao</span>
+              <span className="badge badge--verde">Filtro por dia</span>
+              <span className="badge badge--cinza">Resultados por horario real</span>
+            </div>
           </div>
 
-          <div style={{ maxWidth: 900, margin: '0 auto', background: 'var(--cinza-50)', padding: '2rem', borderRadius: 'var(--raio-lg)', border: '1px solid var(--cinza-200)' }}>
+          <div className="horarios-search-shell">
             <ScheduleSearch />
           </div>
         </div>

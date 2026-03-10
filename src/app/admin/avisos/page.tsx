@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import type { Database, Aviso, TipoAviso } from '@/types';
-import { Megaphone, Plus, Pencil, Trash2, Save, AlertCircle } from 'lucide-react';
+import { Plus, Pencil, Trash2, Save, AlertCircle } from 'lucide-react';
 
 export default function AdminAvisosPage() {
   const [db, setDb] = useState<Database | null>(null);

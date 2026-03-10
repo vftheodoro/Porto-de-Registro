@@ -13,6 +13,7 @@ export default function Header() {
   const links = [
     { href: '/', label: 'Início' },
     { href: '/horarios', label: 'Horários' },
+    { href: '/atendimento', label: 'Atendimento' },
     { href: '/linhas', label: 'Linhas' },
     { href: '/tarifas', label: 'Tarifas' },
     { href: '/sobre', label: 'Sobre' },
@@ -23,7 +24,7 @@ export default function Header() {
       <div className="header__inner">
         <Link href="/" className="header__logo" style={{ display: 'flex', alignItems: 'center' }}>
           <Image 
-            src="/images/logo_escrita_branca_pr.png" 
+            src="/images/logos/logo_escrita_branca_pr.png" 
             alt="Porto de Registro" 
             width={140} 
             height={60} 

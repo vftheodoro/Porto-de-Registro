@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import type { Database, Linha, LinhaParada, Horario, Tarifa, TipoDia } from '@/types';
 import { Save, ArrowLeft, Plus, Trash2, AlertCircle } from 'lucide-react';
@@ -15,7 +15,6 @@ const TIPOS_DIA: { value: TipoDia; label: string }[] = [
 
 export default function AdminLinhaEditPage() {
   const params = useParams();
-  const router = useRouter();
   const id = Number(params.id);
   const [db, setDb] = useState<Database | null>(null);
   const [linha, setLinha] = useState<Linha | null>(null);

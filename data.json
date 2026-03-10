@@ -473,6 +473,34 @@
       "titulo": "Novos Horários Vigentes",
       "conteudo": "As tabelas de horários foram em sua maior parte atualizadas para as vigências de Fev/2026. Note que a linha de Pariquera-Açu não opera aos fins de semana.",
       "tipo": "INFORMATIVO",
+      "ativo": false
+    },
+    {
+      "id": 3,
+      "titulo": "Novo Cartão Estudante — Prazo de 30 dias",
+      "conteudo": "Informamos a todos os estudantes e professores que utilizam o transporte suburbano: é necessário adquirir o novo Cartão Estudante. Após 30 dias, os créditos antigos não poderão mais ser utilizados e serão automaticamente expirados. Conforme regulamentação da ARTESP (Resolução SC-003/2012, art. 9º, §2º), os créditos da modalidade estudante têm validade de até 30 dias corridos a partir da data de carga no cartão eletrônico. Providencie o quanto antes.",
+      "tipo": "INFORMATIVO",
+      "ativo": true
+    },
+    {
+      "id": 4,
+      "titulo": "Cartão Isento — Gratuidade para Idosos (65+)",
+      "conteudo": "Conforme o Estatuto do Idoso (Lei nº 10.741/2003, Art. 39), a Porto de Registro oferece gratuitamente o Cartão Isento para todos os idosos com 65 anos ou mais. Basta comparecer a um de nossos guichês com documento de identidade com foto. Caso o idoso ainda não possua o Cartão Isento, poderá utilizar um documento oficial com foto para garantir a gratuidade. O documento deve ser apresentado obrigatoriamente.",
+      "tipo": "INFORMATIVO",
+      "ativo": true
+    },
+    {
+      "id": 5,
+      "titulo": "Vale-Transporte Online — TDMax Web Commerce",
+      "conteudo": "Para empresas que realizam compras de Vale-Transporte pela internet: utilize a plataforma TDMax Web Commerce. O e-mail para envio do comprovante de pagamento e consulta da situação do pedido é recarga@portoderegistro.com.br. Envie o e-mail para o pedido ser liberado.",
+      "tipo": "INFORMATIVO",
+      "ativo": true
+    },
+    {
+      "id": 6,
+      "titulo": "Declarações Escolares — Assinatura Digital Obrigatória",
+      "conteudo": "As declarações das escolas e faculdades para desbloqueio dos cartões deverão conter assinatura digital válida. Se a declaração for assinada manualmente, a assinatura deverá ser reconhecida em cartório. Declarações sem assinatura digital ou sem reconhecimento em cartório serão consideradas inválidas e não serão aceitas no processo de desbloqueio.",
+      "tipo": "INFORMATIVO",
       "ativo": true
     }
   ]

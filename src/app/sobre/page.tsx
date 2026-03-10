@@ -2,6 +2,7 @@ import Header from '@/components/public/Header';
 import Footer from '@/components/public/Footer';
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ShieldCheck, Clock, Smartphone, MapPin, Instagram, Phone, Globe, CalendarDays, BusFront, AlertTriangle, CreditCard, Ban } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -90,54 +91,15 @@ export default function SobrePage() {
             </div>
           </div>
 
-          {/* Benefit Cards Rules */}
-          <div style={{ background: 'white', borderRadius: 'var(--raio-xl)', border: '1px solid var(--cinza-200)', padding: '2.5rem', marginBottom: '4rem', boxShadow: 'var(--sombra-md)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', borderBottom: '1px solid var(--cinza-100)', paddingBottom: '1.5rem', marginBottom: '2rem' }}>
-              <div style={{ width: 48, height: 48, background: '#FEF2F2', borderRadius: 'var(--raio-md)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#DC2626' }}>
-                <AlertTriangle size={24} />
-              </div>
-              <div>
-                <h2 style={{ color: 'var(--cinza-900)', fontSize: 'var(--texto-xl)', margin: 0 }}>Comunicado Importante</h2>
-                <div style={{ color: '#DC2626', fontWeight: 600, fontSize: '0.9rem', marginTop: '0.25rem' }}>Uso de Cartões de Benefício</div>
-              </div>
+          <div style={{ background: 'white', borderRadius: 'var(--raio-xl)', border: '1px solid var(--cinza-200)', padding: '2rem', marginBottom: '4rem', boxShadow: 'var(--sombra-md)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem', color: 'var(--verde-700)' }}>
+              <AlertTriangle size={20} />
+              <strong>Informacoes ao passageiro centralizadas</strong>
             </div>
-
-            <p style={{ color: 'var(--cinza-700)', lineHeight: 1.6, marginBottom: '1.5rem' }}>
-              A <strong>Porto de Registro Transportes Ltda</strong> informa rigorosamente que os cartões de benefício vinculados à gratuidade ou desconto são intransferíveis:
+            <p style={{ color: 'var(--cinza-700)', lineHeight: 1.6, marginBottom: '1rem' }}>
+              Conteudos sobre cartoes de beneficio, documentacao escolar, gratuidade e regras de uso agora ficam na pagina de atendimento.
             </p>
-
-            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--cinza-50)', padding: '0.75rem 1rem', borderRadius: 'var(--raio-md)', border: '1px solid var(--cinza-200)' }}>
-                <CreditCard size={18} color="var(--cinza-600)" />
-                <span style={{ fontWeight: 500, color: 'var(--cinza-800)' }}>Cartão Idoso</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--cinza-50)', padding: '0.75rem 1rem', borderRadius: 'var(--raio-md)', border: '1px solid var(--cinza-200)' }}>
-                <CreditCard size={18} color="var(--cinza-600)" />
-                <span style={{ fontWeight: 500, color: 'var(--cinza-800)' }}>Cartão PNE (Necessidades Especiais)</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--cinza-50)', padding: '0.75rem 1rem', borderRadius: 'var(--raio-md)', border: '1px solid var(--cinza-200)' }}>
-                <CreditCard size={18} color="var(--cinza-600)" />
-                <span style={{ fontWeight: 500, color: 'var(--cinza-800)' }}>Cartão Estudante</span>
-              </div>
-            </div>
-
-            <div style={{ background: '#FFFBEB', border: '1px solid #FEF3C7', padding: '1.5rem', borderRadius: 'var(--raio-lg)', marginBottom: '2rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#D97706', fontWeight: 600, marginBottom: '1rem' }}>
-                <Ban size={20} />
-                É expressamente proibido emprestar, ceder ou permitir o uso do cartão por terceiros.
-              </div>
-              <div style={{ fontSize: '0.95rem', color: '#92400E', lineHeight: 1.6 }}>O cartão é vinculado presencialmente ao titular verdadeiro. Sendo constatado uso indevido, estarão sujeitos à:</div>
-              <ul style={{ marginTop: '0.75rem', paddingLeft: '1.5rem', color: '#92400E', fontSize: '0.95rem', lineHeight: 1.6 }}>
-                <li>Bloqueio imediato ou cancelamento do cartão.</li>
-                <li>Suspensão do benefício assistencial.</li>
-                <li>Aplicação de sanções aplicáveis e previstas em lei.</li>
-                <li>Comunicação oficial aos órgãos responsáveis e à Artesp.</li>
-              </ul>
-            </div>
-
-            <p style={{ color: 'var(--cinza-600)', fontSize: '0.9rem', textAlign: 'center', margin: 0, fontStyle: 'italic' }}>
-              Contamos com a colaboração de todos para mantermos um transporte justo, seguro e dentro da total legalidade.
-            </p>
+            <Link href="/atendimento" className="btn btn--primary">Ir para Atendimento ao Passageiro</Link>
           </div>
 
           {/* Rapido Perus Banner */}
@@ -151,7 +113,7 @@ export default function SobrePage() {
               </p>
             </div>
             <div style={{ background: 'white', padding: '1rem 1.5rem', borderRadius: 'var(--raio-md)' }}>
-              <Image src="/images/logo_rapido_perus.png" alt="Rápido Perus" width={160} height={50} style={{ objectFit: 'contain' }} />
+              <Image src="/images/logos/logo_rapido_perus.png" alt="Rápido Perus" width={160} height={50} style={{ objectFit: 'contain' }} />
             </div>
           </div>
 

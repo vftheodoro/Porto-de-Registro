@@ -2,7 +2,8 @@ import Header from '@/components/public/Header';
 import Footer from '@/components/public/Footer';
 import AlertBanner from '@/components/public/AlertBanner';
 import { getDb } from '@/lib/db';
-import type { Aviso, LinhaCompleta } from '@/types';
+import { classificarAvisosPublicos } from '@/lib/avisos-publicos';
+import type { LinhaCompleta } from '@/types';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { MapPin } from 'lucide-react';
@@ -16,13 +17,7 @@ export const revalidate = 60;
 
 export default async function LinhasPage() {
   const db = getDb();
-
-  const avisos = db.avisos
-     .filter(a => a.ativo)
-     .sort((a, b) => {
-         const pesos: Record<string, number> = { 'URGENTE': 1, 'FERIADO': 2, 'INFORMATIVO': 3 };
-         return (pesos[a.tipo] || 99) - (pesos[b.tipo] || 99);
-     });
+  const { notificacoes } = classificarAvisosPublicos(db.avisos);
 
   const linhas = db.linhas.filter(l => l.ativa).map(linha => {
      const cidades = new Set<string>();
@@ -44,7 +39,7 @@ export default async function LinhasPage() {
 
   return (
     <>
-      <AlertBanner avisos={avisos} />
+      <AlertBanner avisos={notificacoes} />
       <Header />
 
       <section className="section">

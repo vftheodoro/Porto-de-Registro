@@ -1,13 +1,33 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import type { ResultadoBusca, TipoDia } from '@/types';
-import { ArrowLeftRight, Coins, Bus, Search, Clock } from 'lucide-react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import type { BuscaResponse, ResultadoBusca, RotaConexaoBusca, TipoDia } from '@/types';
+import { ArrowLeftRight, Coins, Bus, Search, Clock, Route, ArrowRight, Timer, Sparkles } from 'lucide-react';
 
 interface Parada {
   id: number;
   nome: string;
   cidade: string;
+}
+
+function toMin(hhmm: string): number {
+  const [hh, mm] = hhmm.split(':').map(Number);
+  return hh * 60 + mm;
+}
+
+function toHHMM(totalMin: number): string {
+  const minutesInDay = 24 * 60;
+  const safe = ((totalMin % minutesInDay) + minutesInDay) % minutesInDay;
+  const hh = Math.floor(safe / 60);
+  const mm = safe % 60;
+  return `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
+}
+
+function getTodayTipoDia(): TipoDia {
+  const day = new Date().getDay();
+  if (day === 0) return 'DOMINGO';
+  if (day === 6) return 'SABADO';
+  return 'UTIL';
 }
 
 export default function ScheduleSearch() {
@@ -16,8 +36,21 @@ export default function ScheduleSearch() {
   const [destino, setDestino] = useState('');
   const [tipoDia, setTipoDia] = useState<TipoDia>('UTIL');
   const [resultados, setResultados] = useState<ResultadoBusca[]>([]);
+  const [conexoes, setConexoes] = useState<RotaConexaoBusca[]>([]);
+  const [destinosPermitidos, setDestinosPermitidos] = useState<string[]>([]);
+  const [loadingDestinos, setLoadingDestinos] = useState(false);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
+  const [error, setError] = useState('');
+  const [agora, setAgora] = useState<Date>(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setAgora(new Date());
+    }, 60_000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     fetch('/api/public/paradas')
@@ -29,22 +62,52 @@ export default function ScheduleSearch() {
   // Get unique cities
   const cidades = [...new Set(paradas.map((p) => p.cidade))].sort();
 
-  // Filter destination cities based on selected origin
-  const cidadesDestino = cidades.filter((c) => c !== origem);
+  useEffect(() => {
+    if (!origem) {
+      setDestinosPermitidos([]);
+      setDestino('');
+      return;
+    }
+
+    setLoadingDestinos(true);
+    fetch(`/api/public/destinos?origem=${encodeURIComponent(origem)}&tipo=${tipoDia}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const destinos = Array.isArray(data.destinos) ? data.destinos : [];
+        setDestinosPermitidos(destinos);
+      })
+      .catch(() => {
+        setDestinosPermitidos([]);
+      })
+      .finally(() => setLoadingDestinos(false));
+  }, [origem, tipoDia]);
+
+  useEffect(() => {
+    if (destino && !destinosPermitidos.includes(destino)) {
+      setDestino('');
+    }
+  }, [destinosPermitidos, destino]);
 
   const buscar = useCallback(async () => {
     if (!origem || !destino) return;
     setLoading(true);
     setSearched(true);
+    setError('');
     try {
       const res = await fetch(
         `/api/public/busca?origem=${encodeURIComponent(origem)}&destino=${encodeURIComponent(destino)}&tipo=${tipoDia}`
       );
-      const data = await res.json();
-      setResultados(data.resultados || []);
+      const data = (await res.json()) as BuscaResponse & { error?: string };
+      if (!res.ok) {
+        throw new Error(data.error || 'Erro ao buscar horarios');
+      }
+      setResultados(Array.isArray(data.resultados) ? data.resultados : []);
+      setConexoes(Array.isArray(data.conexoes) ? data.conexoes : []);
     } catch (error) {
       console.error('Erro na busca:', error);
       setResultados([]);
+      setConexoes([]);
+      setError(error instanceof Error ? error.message : 'Erro ao buscar horarios');
     } finally {
       setLoading(false);
     }
@@ -54,6 +117,10 @@ export default function ScheduleSearch() {
     const tmp = origem;
     setOrigem(destino);
     setDestino(tmp);
+    setResultados([]);
+    setConexoes([]);
+    setSearched(false);
+    setError('');
   };
 
   const dias: { label: string; value: TipoDia }[] = [
@@ -63,10 +130,33 @@ export default function ScheduleSearch() {
     { label: 'Feriado', value: 'FERIADO' },
   ];
 
+  const nowMin = useMemo(() => agora.getHours() * 60 + agora.getMinutes(), [agora]);
+  const nowLabel = useMemo(
+    () => agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+    [agora]
+  );
+  const liveMode = tipoDia === getTodayTipoDia();
+
+  const getConnectionTag = (index: number, esperaMin: number) => {
+    if (index === 0) return 'Melhor equilibrio';
+    if (esperaMin >= 60) return 'Espera alta';
+    if (esperaMin <= 20) return 'Conexao rapida';
+    return 'Alternativa';
+  };
+
   return (
     <div>
       {/* Search Card */}
       <div className="search-card">
+        <div className="search-card__live">
+          <span className="search-card__live-clock">
+            <Timer size={14} /> Agora: {nowLabel}
+          </span>
+          <span className={`search-card__live-mode ${liveMode ? 'search-card__live-mode--on' : ''}`}>
+            {liveMode ? 'Leitura em tempo real ativa' : 'Dia selecionado diferente de hoje'}
+          </span>
+        </div>
+
         <div className="search-card__fields">
           <div className="form-group">
             <label className="form-group__label" htmlFor="origem">
@@ -108,14 +198,28 @@ export default function ScheduleSearch() {
               className="form-group__select"
               value={destino}
               onChange={(e) => setDestino(e.target.value)}
+              disabled={!origem || loadingDestinos}
             >
-              <option value="">Selecione o destino</option>
-              {cidadesDestino.map((c) => (
+              <option value="">
+                {!origem
+                  ? 'Escolha a origem primeiro'
+                  : loadingDestinos
+                    ? 'Carregando destinos...'
+                    : destinosPermitidos.length === 0
+                      ? 'Sem destinos disponiveis para este dia'
+                      : 'Selecione o destino'}
+              </option>
+              {destinosPermitidos.map((c) => (
                 <option key={c} value={c}>
                   {c}
                 </option>
               ))}
             </select>
+            {origem && !loadingDestinos && destinosPermitidos.length === 0 && (
+              <p className="search-card__hint search-card__hint--warn">
+                Nao ha trajetos saindo de {origem} para {dias.find((d) => d.value === tipoDia)?.label.toLowerCase()}.
+              </p>
+            )}
           </div>
         </div>
 
@@ -137,7 +241,7 @@ export default function ScheduleSearch() {
         <button
           className="btn btn--primary btn--full"
           onClick={buscar}
-          disabled={!origem || !destino || loading}
+          disabled={!origem || !destino || loading || !destinosPermitidos.includes(destino)}
         >
           {loading ? (
             <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', justifyContent: 'center' }}>
@@ -160,76 +264,185 @@ export default function ScheduleSearch() {
               <span className="spinner" />
               Carregando horários...
             </div>
-          ) : resultados.length > 0 ? (
-            resultados.map((r) => (
-              <div key={r.linha.id} className="results" style={{ marginTop: '1.5rem' }}>
-                <div className="results__header">
-                  <div>
-                    <div className="results__title">
-                      {r.linha.nome}
-                    </div>
-                    <div style={{ fontSize: '0.875rem', color: 'var(--cinza-600)', marginTop: '0.25rem' }}>
-                      {r.tempo_estimado && (
-                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                          <Clock size={14} /> {r.tempo_estimado} min
-                        </span>
+          ) : (resultados.length > 0 || conexoes.length > 0) ? (
+            <>
+            {error && (
+              <div className="results" style={{ marginTop: '1.5rem' }}>
+                <div className="results__empty">
+                  <p>{error}</p>
+                </div>
+              </div>
+            )}
+
+            {resultados.length > 0 && resultados.map((r) => {
+              const origemOffset = r.paradas.find((p) => p.parada_cidade === origem)?.tempo_minutos ?? 0;
+              const horariosOrdenados = [...r.horarios].sort((a, b) => {
+                const aMin = toMin(a.hora_saida) + origemOffset;
+                const bMin = toMin(b.hora_saida) + origemOffset;
+                return aMin - bMin;
+              });
+
+              const nextHorario = liveMode
+                ? horariosOrdenados.find((h) => toMin(h.hora_saida) + origemOffset >= nowMin)
+                : null;
+
+              const nextBoardingMin = nextHorario
+                ? toMin(nextHorario.hora_saida) + origemOffset
+                : null;
+
+              return (
+                <div key={r.linha.id} className="results" style={{ marginTop: '1.5rem' }}>
+                  <div className="results__header">
+                    <div>
+                      <div className="results__title">
+                        {r.linha.nome}
+                      </div>
+                      <div style={{ fontSize: '0.875rem', color: 'var(--cinza-600)', marginTop: '0.25rem' }}>
+                        {typeof r.tempo_estimado === 'number' && (
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                            <Clock size={14} /> {r.tempo_estimado} min
+                          </span>
+                        )}
+                        {r.tarifa && (
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                            {' · '} <Coins size={14} /> R$ {r.tarifa.toFixed(2)}
+                          </span>
+                        )}
+                      </div>
+                      {liveMode && nextHorario && nextBoardingMin != null && (
+                        <div className="results__next-info">
+                          <Sparkles size={14} />
+                          Proximo embarque em {toHHMM(nextBoardingMin)} ({Math.max(0, nextBoardingMin - nowMin)} min)
+                        </div>
                       )}
-                      {r.tarifa && (
-                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                          {' · '} <Coins size={14} /> R$ {r.tarifa.toFixed(2)}
-                        </span>
-                      )}
                     </div>
+                    <span className="badge badge--verde">{r.linha.codigo}</span>
                   </div>
-                  <span className="badge badge--verde">{r.linha.codigo}</span>
+
+                  <table className="schedule-table">
+                    <thead>
+                      <tr>
+                        <th>Saída</th>
+                        <th>Chegada estimada</th>
+                        <th>Observação</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {horariosOrdenados.map((h) => {
+                        let chegada = '';
+                        const saidaEmbarqueMin = toMin(h.hora_saida) + origemOffset;
+                        const saidaExibida = toHHMM(saidaEmbarqueMin);
+                        if (typeof r.tempo_estimado === 'number') {
+                          const totalMin = saidaEmbarqueMin + r.tempo_estimado;
+                          chegada = toHHMM(totalMin);
+                        }
+
+                        const status = !liveMode
+                          ? 'programado'
+                          : nextBoardingMin != null && saidaEmbarqueMin === nextBoardingMin
+                            ? 'proximo'
+                            : saidaEmbarqueMin < nowMin
+                              ? 'passou'
+                              : 'futuro';
+
+                        return (
+                          <tr key={h.id} className={`schedule-row schedule-row--${status}`}>
+                            <td>
+                              <span className="schedule-table__time">{saidaExibida}</span>
+                            </td>
+                            <td>{chegada || '—'}</td>
+                            <td>
+                              {status === 'passou' && <span className="schedule-status-tag">Ja passou</span>}
+                              {status === 'proximo' && <span className="schedule-status-tag schedule-status-tag--next">Proximo</span>}
+                              {status === 'futuro' && <span className="schedule-status-tag schedule-status-tag--future">A caminho</span>}
+                              {h.observacao ? (
+                                <span className="schedule-table__obs">{h.observacao}</span>
+                              ) : (
+                                '—'
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              );
+            })}
+
+            {conexoes.length > 0 && (
+              <div className="results" style={{ marginTop: '1.5rem' }}>
+                <div className="results__header">
+                  <div className="results__title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <Route size={18} /> Rotas com conexao
+                  </div>
+                  <span className="badge badge--dourado">{conexoes.length} opcao(oes)</span>
                 </div>
 
-                <table className="schedule-table">
-                  <thead>
-                    <tr>
-                      <th>Saída</th>
-                      <th>Chegada estimada</th>
-                      <th>Observação</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {r.horarios.map((h) => {
-                      // Calculate estimated arrival
-                      let chegada = '';
-                      if (r.tempo_estimado) {
-                        const [hh, mm] = h.hora_saida.split(':').map(Number);
-                        const totalMin = hh * 60 + mm + r.tempo_estimado;
-                        chegada = `${String(Math.floor(totalMin / 60) % 24).padStart(2, '0')}:${String(totalMin % 60).padStart(2, '0')}`;
-                      }
-                      return (
-                        <tr key={h.id}>
-                          <td>
-                            <span className="schedule-table__time">{h.hora_saida}</span>
-                          </td>
-                          <td>{chegada || '—'}</td>
-                          <td>
-                            {h.observacao ? (
-                              <span className="schedule-table__obs">{h.observacao}</span>
-                            ) : (
-                              '—'
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+                <div className="connection-list">
+                  {conexoes.map((rota, index) => (
+                    <article key={rota.id} className="connection-card">
+                      <div className="connection-card__top">
+                        <div className="connection-card__title-wrap">
+                          <div className="connection-card__title-line">
+                            <strong>{rota.trechos[0].origem}</strong> <ArrowRight size={14} style={{ verticalAlign: 'middle' }} /> <strong>{rota.trechos[1].destino}</strong>
+                          </div>
+                          <div className="connection-card__periodo">
+                            Saida {rota.saida_total} · Chegada {rota.chegada_total}
+                          </div>
+                        </div>
+                        <div className="connection-card__tag">
+                          {getConnectionTag(index, rota.tempo_espera_min)}
+                        </div>
+                      </div>
+
+                      <div className="connection-card__meta-grid">
+                        <div className="connection-metric">
+                          <span className="connection-metric__label">Tempo total</span>
+                          <span className="connection-metric__value"><Clock size={14} /> {rota.duracao_total_min} min</span>
+                        </div>
+                        <div className="connection-metric">
+                          <span className="connection-metric__label">Conexao</span>
+                          <span className="connection-metric__value">Em {rota.conexao_em}</span>
+                        </div>
+                        <div className="connection-metric">
+                          <span className="connection-metric__label">Espera</span>
+                          <span className="connection-metric__value">{rota.tempo_espera_min} min</span>
+                        </div>
+                        <div className="connection-metric">
+                          <span className="connection-metric__label">Tarifa estimada</span>
+                          <span className="connection-metric__value">
+                            {rota.tarifa_total != null ? <><Coins size={14} /> R$ {rota.tarifa_total.toFixed(2)}</> : 'Consulte no embarque'}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="connection-card__legs">
+                        {rota.trechos.map((trecho, idx) => (
+                          <div key={`${rota.id}-${idx}`} className="connection-leg">
+                            <div className="connection-leg__badge">Trecho {idx + 1}</div>
+                            <div className="connection-leg__line">{trecho.linha.codigo} - {trecho.linha.nome}</div>
+                            <div className="connection-leg__time">
+                              {trecho.origem} {trecho.saida} <ArrowRight size={14} style={{ verticalAlign: 'middle' }} /> {trecho.destino} {trecho.chegada}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </article>
+                  ))}
+                </div>
               </div>
-            ))
+            )}
+            </>
           ) : (
             <div className="results" style={{ marginTop: '1.5rem' }}>
               <div className="results__empty">
                 <div className="results__empty-icon"><Bus size={48} color="var(--cinza-400)" /></div>
                 <p style={{ fontWeight: 600, marginBottom: '0.5rem' }}>
-                  Nenhum horário encontrado
+                  Nenhum horario encontrado
                 </p>
                 <p>
-                  Não há ônibus direto de <strong>{origem}</strong> para{' '}
+                  Nao ha opcao de viagem de <strong>{origem}</strong> para{' '}
                   <strong>{destino}</strong> para{' '}
                   {dias.find((d) => d.value === tipoDia)?.label?.toLowerCase()}.
                 </p>

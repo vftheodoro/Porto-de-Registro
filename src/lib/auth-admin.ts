@@ -5,10 +5,27 @@
 
 const COOKIE_NAME = 'admin_session';
 const TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+const DEV_FALLBACK_PASSWORD = 'admin';
+const DEV_FALLBACK_SECRET = 'dev-admin-secret-32chars-fallback';
+
+function isDevMode(): boolean {
+  return process.env.NODE_ENV !== 'production';
+}
+
+function getEffectiveSecret(): string | null {
+  const configured = process.env.ADMIN_SECRET;
+  if (configured && configured.length >= 16) {
+    return configured;
+  }
+  if (isDevMode()) {
+    return DEV_FALLBACK_SECRET;
+  }
+  return null;
+}
 
 function getSecret(): string {
-  const s = process.env.ADMIN_SECRET;
-  if (!s || s.length < 16) {
+  const s = getEffectiveSecret();
+  if (!s) {
     throw new Error('ADMIN_SECRET must be set and at least 16 characters');
   }
   return s;
@@ -44,8 +61,8 @@ export async function createAdminSession(): Promise<string> {
 /** Returns true if the cookie value is valid and not expired. Use in middleware and layout. */
 export async function verifyAdminSession(cookieValue: string | null): Promise<boolean> {
   if (!cookieValue) return false;
-  const secret = process.env.ADMIN_SECRET;
-  if (!secret || secret.length < 16) return false;
+  const secret = getEffectiveSecret();
+  if (!secret) return false;
   const parts = cookieValue.split('.');
   if (parts.length !== 2) return false;
   const [payload, signature] = parts;
@@ -58,9 +75,15 @@ export async function verifyAdminSession(cookieValue: string | null): Promise<bo
 }
 
 export function getAdminPassword(): string | null {
-  return process.env.ADMIN_PASSWORD ?? null;
+  if (process.env.ADMIN_PASSWORD) {
+    return process.env.ADMIN_PASSWORD;
+  }
+  if (isDevMode()) {
+    return DEV_FALLBACK_PASSWORD;
+  }
+  return null;
 }
 
 export function isAdminConfigured(): boolean {
-  return !!(process.env.ADMIN_PASSWORD && process.env.ADMIN_SECRET);
+  return !!(getAdminPassword() && getEffectiveSecret());
 }

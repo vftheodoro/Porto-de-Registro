@@ -1,24 +1,25 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
+import { classificarAvisosPublicos } from '@/lib/avisos-publicos';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const db = getDb();
-    
-    // Apenas avisos ativos
-    const avisos = db.avisos
-       .filter(a => a.ativo)
-       .sort((a, b) => {
-          // URGENTE primeiro, FERIADO depois, INFORMATIVO no fim
-           const pesos: Record<string, number> = {
-               'URGENTE': 1,
-               'FERIADO': 2,
-               'INFORMATIVO': 3
-           };
-           return (pesos[a.tipo] || 99) - (pesos[b.tipo] || 99);
-       });
+    const { searchParams } = new URL(request.url);
+    const grupo = searchParams.get('grupo');
 
-    return NextResponse.json(avisos);
+    const { notificacoes, informativosCartoes } = classificarAvisosPublicos(db.avisos);
+
+    if (grupo === 'informativos') {
+      return NextResponse.json(informativosCartoes);
+    }
+
+    if (grupo === 'todos') {
+      return NextResponse.json({ notificacoes, informativos: informativosCartoes });
+    }
+
+    // Compatibilidade: resposta padrão mantém apenas notificações operacionais.
+    return NextResponse.json(notificacoes);
   } catch (error) {
     console.error('Erro ao buscar avisos:', error);
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
