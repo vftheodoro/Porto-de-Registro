@@ -509,6 +509,12 @@ export default function ScheduleSearch() {
                           </span>
                         )}
                       </div>
+                      <div className="results__fare-highlight">
+                        <Coins size={16} />
+                        {r.tarifa != null
+                          ? `Tarifa da passagem: R$ ${r.tarifa.toFixed(2)}`
+                          : 'Tarifa da passagem: consulte no embarque'}
+                      </div>
                       {liveMode && nextHorario && nextBoardingMin != null && (
                         <div className="results__next-info">
                           <Sparkles size={14} />
@@ -516,7 +522,6 @@ export default function ScheduleSearch() {
                         </div>
                       )}
                     </div>
-                    <span className="badge badge--verde">{r.linha.codigo}</span>
                   </div>
                   <table className="schedule-table">
                     <thead>
@@ -551,14 +556,16 @@ export default function ScheduleSearch() {
                             </td>
                             <td>{chegada || '—'}</td>
                             <td>
-                              {status === 'passou' && <span className="schedule-status-tag">Ja passou</span>}
-                              {status === 'proximo' && <span className="schedule-status-tag schedule-status-tag--next">Proximo</span>}
-                              {status === 'futuro' && <span className="schedule-status-tag schedule-status-tag--future">A caminho</span>}
-                              {h.observacao ? (
-                                <span className="schedule-table__obs">{h.observacao}</span>
-                              ) : (
-                                '—'
-                              )}
+                              <div className="schedule-table__obs-wrap">
+                                {status === 'passou' && <span className="schedule-status-tag schedule-status-tag--past">Ja passou</span>}
+                                {status === 'proximo' && <span className="schedule-status-tag schedule-status-tag--next">Proximo</span>}
+                                {status === 'futuro' && <span className="schedule-status-tag schedule-status-tag--future">A caminho</span>}
+                                {h.observacao ? (
+                                  <span className="schedule-table__obs">{h.observacao}</span>
+                                ) : (
+                                  <span className="schedule-table__obs schedule-table__obs--empty">—</span>
+                                )}
+                              </div>
                             </td>
                           </tr>
                         );
@@ -619,7 +626,7 @@ export default function ScheduleSearch() {
                         {rota.trechos.map((trecho, idx) => (
                           <div key={`${rota.id}-${idx}`} className="connection-leg">
                             <div className="connection-leg__badge">Trecho {idx + 1}</div>
-                            <div className="connection-leg__line">{trecho.linha.codigo} - {trecho.linha.nome}</div>
+                            <div className="connection-leg__line">{trecho.linha.nome}</div>
                             <div className="connection-leg__time">
                               {trecho.origem} {trecho.saida} <ArrowRight size={14} className="icon-inline-middle" /> {trecho.destino} {trecho.chegada}
                             </div>

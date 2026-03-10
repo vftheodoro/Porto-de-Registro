@@ -156,7 +156,6 @@ export default function LinhaDetailClient({
               <div className="results line-schedule-panel">
                 <div className="results__header">
                   <div className="results__title">Ida: {linha.nome}</div>
-                  <span className="badge badge--verde">{linha.codigo}</span>
                 </div>
                 {horariosFiltrados.length > 0 ? (
                   <>
@@ -210,7 +209,6 @@ export default function LinhaDetailClient({
                     <div className="results__title results__title--with-icon-sm">
                       <ArrowRightLeft size={16} /> Volta: {linhaVolta.nome}
                     </div>
-                    <span className="badge badge--verde">{linhaVolta.codigo}</span>
                   </div>
                   {horariosVoltaFiltrados.length > 0 ? (
                     <>
@@ -329,7 +327,6 @@ export default function LinhaDetailClient({
               <div className="results results--tight-top">
                 <div className="results__header">
                   <div className="results__title">Tarifas da volta: {linhaVolta.nome}</div>
-                  <span className="badge badge--verde">{linhaVolta.codigo}</span>
                 </div>
                 <table className="fare-table">
                   <thead>

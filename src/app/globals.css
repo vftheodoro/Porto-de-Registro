@@ -135,6 +135,101 @@ body {
 }
 
 /* ==========================================
+   First Visit Intro
+   ========================================== */
+.intro-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 2200;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 22% 24%, rgba(212, 168, 67, 0.22), transparent 32%),
+    radial-gradient(circle at 78% 72%, rgba(255, 255, 255, 0.08), transparent 30%),
+    linear-gradient(160deg, #0e3c18 0%, var(--verde-800) 46%, var(--verde-700) 100%);
+  animation: introSplashFadeOut 700ms ease forwards;
+  animation-delay: 1900ms;
+}
+
+.intro-splash__logo-wrap {
+  position: relative;
+  padding: 1.15rem 1.35rem;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.28);
+  animation: introLogoEnter 880ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.intro-splash__logo-wrap::after {
+  content: "";
+  position: absolute;
+  inset: -18px;
+  border-radius: 28px;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.24), transparent 70%);
+  z-index: -1;
+  animation: introPulse 1500ms ease-in-out infinite;
+}
+
+.intro-splash__logo {
+  width: clamp(220px, 46vw, 380px);
+  height: auto;
+  display: block;
+  animation: introLogoFloat 2200ms ease-in-out infinite;
+}
+
+.intro-splash__credit {
+  position: absolute;
+  left: 50%;
+  bottom: 1.6rem;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: var(--texto-sm);
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+@keyframes introLogoEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.86);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes introLogoFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+@keyframes introPulse {
+  0%,
+  100% {
+    opacity: 0.38;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.03);
+  }
+}
+
+@keyframes introSplashFadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* ==========================================
    Route Transition
    ========================================== */
 .page-transition {
@@ -2148,6 +2243,123 @@ textarea {
   }
 }
 
+@media (max-width: 640px) {
+  .tarifas-page .container {
+    padding-inline: 0.8rem;
+  }
+
+  .tarifas-hero__chips {
+    align-items: stretch;
+  }
+
+  .tarifas-hero__chips .badge {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .pagamento-policy {
+    border-radius: var(--raio-lg);
+  }
+
+  .pagamento-policy__header,
+  .pagamento-policy__grid {
+    padding: var(--esp-3);
+  }
+
+  .pagamento-policy__title {
+    font-size: var(--texto-lg);
+  }
+
+  .pagamento-policy__alert {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .tarifas-list__item {
+    margin-bottom: var(--esp-5);
+    border-radius: var(--raio-lg);
+    overflow: hidden;
+  }
+
+  .tarifas-list__item .results__header {
+    align-items: flex-start;
+    gap: var(--esp-2);
+  }
+
+  .tarifas-table-wrap {
+    overflow: visible;
+  }
+
+  .fare-table {
+    min-width: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .fare-table thead {
+    display: none;
+  }
+
+  .fare-table tbody {
+    display: grid;
+    gap: 0.75rem;
+    padding: 0.8rem;
+    background: #f7f8f6;
+  }
+
+  .fare-table tbody tr {
+    display: grid;
+    gap: 0.5rem;
+    padding: 0.85rem;
+    background: var(--branco);
+    border: 1px solid var(--cinza-200);
+    border-radius: var(--raio-md);
+    box-shadow: var(--sombra-xs);
+  }
+
+  .fare-table tbody td {
+    display: grid;
+    grid-template-columns: 74px 1fr;
+    gap: 0.55rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font-size: var(--texto-sm);
+  }
+
+  .fare-table tbody tr:nth-child(even) td,
+  .fare-table tbody tr:hover td {
+    background: transparent;
+  }
+
+  .fare-table tbody td::before {
+    content: attr(data-label);
+    color: var(--cinza-600);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    align-self: start;
+    padding-top: 0.15rem;
+  }
+
+  .fare-table__cell--price {
+    grid-template-columns: 74px auto;
+    align-items: center;
+  }
+
+  .fare-table__col-price {
+    text-align: left !important;
+  }
+
+  .fare-table__value {
+    font-size: var(--texto-base);
+    padding: 0.12rem 0.55rem;
+  }
+}
+
 /* ==========================================
    Spinner / Loading
    ========================================== */
@@ -3114,15 +3326,78 @@ textarea {
   font-size: 0.65rem;
   font-weight: 700;
   text-transform: uppercase;
+.results__fare-highlight {
+  margin-top: 0.45rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--raio-full);
+  background: var(--dourado-100);
+  border: 1px solid var(--dourado-300);
+  color: #6b4c00;
+  font-size: var(--texto-sm);
+  font-weight: 700;
+}
   letter-spacing: 0.8px;
   margin-bottom: var(--esp-2);
   color: var(--cinza-500);
 }
 
+.schedule-table__obs-wrap {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.schedule-table__obs--empty {
+  color: var(--cinza-500);
+  font-style: normal;
+}
 .comunicado-card--urgente .comunicado-card__badge {
   color: var(--vermelho);
 }
 
+.schedule-status-tag--past {
+  background: var(--cinza-200);
+  color: var(--cinza-700);
+}
+
+@media (max-width: 640px) {
+  .results__fare-highlight {
+    display: flex;
+    width: fit-content;
+    max-width: 100%;
+    line-height: 1.35;
+  }
+
+  .schedule-table th,
+  .schedule-table td {
+    padding: 0.65rem 0.65rem;
+  }
+
+  .schedule-table th {
+    font-size: 0.75rem;
+  }
+
+  .schedule-status-tag {
+    margin-right: 0;
+    padding: 0.18rem 0.46rem;
+    font-size: 0.63rem;
+    letter-spacing: 0.02em;
+  }
+
+  .schedule-table__obs-wrap {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.28rem;
+  }
+
+  .schedule-table__obs {
+    font-size: 0.8rem;
+    line-height: 1.35;
+  }
+}
 .comunicado-card__title {
   font-size: var(--texto-base);
   font-weight: 700;
@@ -3155,6 +3430,7 @@ textarea {
 }
 
 .frota-card {
+  position: relative;
   background: var(--cinza-50);
   border-radius: var(--raio-xl);
   overflow: hidden;
@@ -3168,11 +3444,90 @@ textarea {
 }
 
 .frota-card__img {
+  position: relative;
   padding: var(--esp-6) var(--esp-4) var(--esp-2);
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 200px;
+  isolation: isolate;
+}
+
+.frota-card__img::before,
+.frota-card__img::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.frota-card__img::before {
+  width: 170px;
+  height: 170px;
+  top: 20px;
+  right: 12%;
+  background: radial-gradient(circle at 35% 35%, rgba(212, 168, 67, 0.26), rgba(212, 168, 67, 0));
+  animation: frotaHaloDrift 7.4s ease-in-out infinite;
+}
+
+.frota-card__img::after {
+  width: 110px;
+  height: 110px;
+  left: 10%;
+  bottom: 16px;
+  background: radial-gradient(circle at 40% 40%, rgba(45, 138, 70, 0.2), rgba(45, 138, 70, 0));
+  animation: frotaHaloDrift 6.3s ease-in-out infinite reverse;
+}
+
+.frota-card__image {
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  filter: drop-shadow(0 16px 18px rgba(13, 51, 21, 0.18));
+  transform-origin: center 62%;
+}
+
+.frota-card__image--torino {
+  animation: busFloatTorino 4.8s ease-in-out infinite;
+}
+
+.frota-card__image--neobus {
+  animation: busFloatNeobus 5.4s ease-in-out infinite;
+}
+
+.frota-card--torino .frota-card__img::before {
+  animation-delay: -0.8s;
+}
+
+.frota-card--neobus .frota-card__img::before {
+  animation-delay: -2.4s;
+}
+
+.frota-card--neobus .frota-card__img::after {
+  animation-delay: -1.5s;
+}
+
+@keyframes busFloatTorino {
+  0% { transform: translate3d(0, 0, 0) rotate(-0.9deg) scale(1); }
+  25% { transform: translate3d(0, -8px, 0) rotate(0.35deg) scale(1.007); }
+  50% { transform: translate3d(0, -13px, 0) rotate(0.9deg) scale(1.012); }
+  75% { transform: translate3d(0, -7px, 0) rotate(0.15deg) scale(1.006); }
+  100% { transform: translate3d(0, 0, 0) rotate(-0.9deg) scale(1); }
+}
+
+@keyframes busFloatNeobus {
+  0% { transform: translate3d(0, -2px, 0) rotate(0.8deg) scale(1.002); }
+  25% { transform: translate3d(0, -10px, 0) rotate(-0.2deg) scale(1.009); }
+  50% { transform: translate3d(0, -6px, 0) rotate(-0.7deg) scale(1.006); }
+  75% { transform: translate3d(0, -12px, 0) rotate(0.2deg) scale(1.012); }
+  100% { transform: translate3d(0, -2px, 0) rotate(0.8deg) scale(1.002); }
+}
+
+@keyframes frotaHaloDrift {
+  0% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.65; }
+  50% { transform: translate3d(-8px, -10px, 0) scale(1.08); opacity: 0.38; }
+  100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.65; }
 }
 
 .frota-card__info {
@@ -3189,6 +3544,15 @@ textarea {
   font-size: var(--texto-sm);
   font-weight: 600;
   color: var(--cinza-700);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frota-card__image,
+  .frota-card__img::before,
+  .frota-card__img::after {
+    animation: none !important;
+    transform: none !important;
+  }
 }
 
 /* ==========================================
@@ -3423,7 +3787,7 @@ textarea {
 .atendimento-card-3d {
   position: relative;
   width: min(100%, 230px);
-  aspect-ratio: 360 / 220;
+  aspect-ratio: 360 / 230;
   transform-style: preserve-3d;
   animation: atendimento-card-flip 7s ease-in-out infinite;
 }
@@ -3456,11 +3820,12 @@ textarea {
 .atendimento-card-spotlight__image {
   display: block;
   width: 100%;
-  max-width: 230px;
+  max-width: 100%;
   height: auto;
   border-radius: var(--raio-xl);
   border: 1px solid rgba(255, 255, 255, 0.22);
   box-shadow: 0 18px 36px rgba(0, 0, 0, 0.25);
+  object-fit: contain;
 }
 
 @keyframes atendimento-card-flip {
@@ -3770,6 +4135,34 @@ textarea {
     padding: var(--esp-8) 0;
   }
 
+  .atendimento-hero .container,
+  .atendimento-hero__content,
+  .atendimento-hero__media {
+    min-width: 0;
+  }
+
+  .atendimento-hero__grid {
+    gap: var(--esp-6);
+  }
+
+  .atendimento-hero__title {
+    margin-top: var(--esp-3);
+    font-size: clamp(1.9rem, 8.2vw, 2.35rem);
+    line-height: 1.08;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+  }
+
+  .atendimento-hero__subtitle {
+    font-size: 1.03rem;
+    line-height: 1.55;
+  }
+
+  .atendimento-hero__actions {
+    margin-top: var(--esp-5);
+    gap: var(--esp-2);
+  }
+
   .atendimento-hero__actions .btn,
   .atendimento-contact-btn,
   .atendimento-hero__contact {
@@ -3777,17 +4170,112 @@ textarea {
     justify-content: center;
   }
 
+  .atendimento-hero__chips {
+    margin-top: var(--esp-4);
+    flex-wrap: wrap;
+    overflow: visible;
+    padding-bottom: 0;
+  }
+
+  .atendimento-chip {
+    white-space: normal;
+    border-color: rgba(255, 255, 255, 0.34);
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  .atendimento-hero__media {
+    margin-top: var(--esp-1);
+  }
+
+  .atendimento-card-spotlight {
+    width: 100%;
+    padding: 0.85rem;
+    border-radius: var(--raio-xl);
+    background: linear-gradient(170deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    overflow: hidden;
+  }
+
+  .atendimento-card-spotlight__label {
+    margin-bottom: var(--esp-2);
+  }
+
+  .atendimento-card-spotlight__gallery {
+    justify-content: center;
+    width: 100%;
+  }
+
   .atendimento-final {
     flex-direction: column;
     align-items: flex-start;
   }
 
+  .atendimento-final .btn {
+    width: 100%;
+  }
+
+  .atendimento-step {
+    grid-template-columns: 34px 1fr;
+    gap: var(--esp-2);
+  }
+
+  .atendimento-step__num {
+    width: 30px;
+    height: 30px;
+    font-size: var(--texto-sm);
+  }
+
+  .atendimento-service-card,
+  .atendimento-aside__card,
+  .atendimento-steps {
+    padding: var(--esp-4);
+  }
+
   .atendimento-card-3d {
-    width: min(100%, 300px);
+    width: 100%;
+    max-width: 340px;
+    aspect-ratio: 360 / 230;
+    margin-inline: auto;
   }
 
   .atendimento-card-spotlight__image {
-    max-width: 300px;
+    max-width: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .atendimento-hero {
+    padding: 1.75rem 0;
+  }
+
+  .atendimento-hero__kicker {
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+  }
+
+  .atendimento-hero__title {
+    font-size: clamp(1.78rem, 9.2vw, 2.15rem);
+  }
+
+  .atendimento-hero__subtitle {
+    font-size: 0.99rem;
+  }
+
+  .atendimento-card-spotlight {
+    padding: 0.65rem;
+  }
+
+  .atendimento-card-spotlight__label {
+    font-size: 0.64rem;
+  }
+
+  .atendimento-card-3d,
+  .atendimento-card-spotlight__image {
+    max-width: 100%;
+  }
+
+  .atendimento-hero__title {
+    text-wrap: pretty;
   }
 }
 
@@ -4436,5 +4924,66 @@ textarea {
 
   .sobre-hero__subtitle {
     font-size: var(--texto-lg);
+  }
+
+  .linhas-page .linhas-overview {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--esp-3);
+  }
+
+  .line-detail-overview {
+    grid-template-columns: 1fr;
+    gap: var(--esp-3);
+  }
+
+  .line-detail-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-bottom: var(--esp-6);
+  }
+
+  .line-detail-tab {
+    width: 100%;
+    text-align: center;
+  }
+
+  .line-detail-toolbar {
+    align-items: stretch;
+  }
+
+  .line-detail-toolbar .btn,
+  .line-detail-toolbar .btn[aria-disabled='true'] {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 520px) {
+  .linhas-page .linhas-overview {
+    grid-template-columns: 1fr;
+  }
+
+  .line-detail-tabs {
+    grid-template-columns: 1fr;
+    margin-bottom: var(--esp-5);
+  }
+
+  .line-detail-overview__value {
+    font-size: 0.95rem;
+    line-height: 1.35;
+  }
+
+  .line-detail-day-tabs {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding-bottom: 0.2rem;
+  }
+
+  .line-detail-day-tabs .search-card__day-tab {
+    flex: 0 0 auto;
+    white-space: nowrap;
   }
 }

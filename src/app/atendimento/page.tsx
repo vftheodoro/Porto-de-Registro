@@ -43,16 +43,6 @@ export default async function AtendimentoPage() {
               <Link href="/horarios" className="btn btn--gold">
                 <BusFront size={18} /> Buscar horarios
               </Link>
-              <Link href="/tarifas" className="btn btn--secondary">
-                Ver tarifas
-              </Link>
-            </div>
-
-            <div className="atendimento-hero__chips">
-              <span className="atendimento-chip">Cartao estudante</span>
-              <span className="atendimento-chip">Declaracoes escolares</span>
-              <span className="atendimento-chip">Cartao isento</span>
-              <span className="atendimento-chip">Vale-transporte</span>
             </div>
           </div>
 

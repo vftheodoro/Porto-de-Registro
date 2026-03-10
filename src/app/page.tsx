@@ -136,14 +136,14 @@ export default async function HomePage() {
             <p className="section__subtitle">Veículos modernos e seguros para a sua viagem</p>
           </div>
           <div className="frota-grid">
-            <div className="frota-card">
+            <div className="frota-card frota-card--torino">
               <div className="frota-card__img">
                 <Image
                   src={withBasePath('/images/onibus/onibus1.png')}
                   alt="Ônibus Porto de Registro - Marcopolo Torino branco"
                   width={560}
                   height={320}
-                  className="frota-card__image"
+                  className="frota-card__image frota-card__image--torino"
                 />
               </div>
               <div className="frota-card__info">
@@ -151,14 +151,14 @@ export default async function HomePage() {
                 <span className="frota-card__model">Marcopolo Torino</span>
               </div>
             </div>
-            <div className="frota-card">
+            <div className="frota-card frota-card--neobus">
               <div className="frota-card__img">
                 <Image
                   src={withBasePath('/images/onibus/onibus2.png')}
                   alt="Ônibus Porto de Registro - Neobus verde"
                   width={560}
                   height={320}
-                  className="frota-card__image"
+                  className="frota-card__image frota-card__image--neobus"
                 />
               </div>
               <div className="frota-card__info">
@@ -187,7 +187,6 @@ export default async function HomePage() {
                 href={`/linhas/${linha.slug}`}
                 className="route-card"
               >
-                <div className="route-card__code">{linha.codigo}</div>
                 <div className="route-card__name">{linha.nome}</div>
                 <div className="route-card__cities route-card__cities--icon">
                   <MapPin size={16} /> {linha.cidades.split(', ').join(' → ')}

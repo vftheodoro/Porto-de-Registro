@@ -112,7 +112,6 @@ export default async function LinhasPage() {
                 href={`/linhas/${linha.slug}`}
                 className="route-card"
               >
-                <div className="route-card__code">{linha.codigo}</div>
                 <div className="route-card__name">{linha.nome}</div>
                 <div className="route-card__cities route-card__cities--icon">
                   <MapPin size={16} /> {linha.cidades.split(', ').join(' → ')}

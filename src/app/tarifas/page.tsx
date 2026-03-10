@@ -48,10 +48,6 @@ export default async function TarifasPage() {
             <p className="section__subtitle">
               Consulte os valores por trecho e as formas de pagamento aceitas
             </p>
-            <div className="tarifas-hero__chips" aria-label="Informacoes de pagamento">
-              <span className="badge badge--dourado">Terminal: Pix, cartao e dinheiro</span>
-              <span className="badge badge--cinza">Onibus fora da rodoviaria: somente dinheiro</span>
-            </div>
           </div>
 
           <section className="pagamento-policy" aria-label="Formas de pagamento">
@@ -94,7 +90,6 @@ export default async function TarifasPage() {
                     <div className="results__title">{linha.nome}</div>
                     <p className="tarifas-line-head__subtitle">Valores oficiais por trecho cadastrado</p>
                   </div>
-                  <span className="badge badge--verde">{linha.codigo}</span>
                 </div>
 
                 <div className="tarifas-table-wrap">
@@ -109,9 +104,9 @@ export default async function TarifasPage() {
                     <tbody>
                       {linha.tarifasDetalhes.map((t, idx) => (
                         <tr key={idx}>
-                          <td>{t.origem_nome}</td>
-                          <td>{t.destino_nome}</td>
-                          <td className="fare-table__col-price">
+                          <td data-label="Origem">{t.origem_nome}</td>
+                          <td data-label="Destino">{t.destino_nome}</td>
+                          <td data-label="Tarifa" className="fare-table__col-price fare-table__cell--price">
                             <span className="fare-table__value">
                               R$ {t.valor.toFixed(2)}
                             </span>

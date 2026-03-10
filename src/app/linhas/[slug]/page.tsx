@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: `${linha.nome} — Horários e Tarifas | Porto de Registro`,
-    description: `Consulte horários, paradas e tarifas da linha ${linha.codigo} ${linha.nome} operada pela Porto de Registro no Vale do Ribeira.`,
+    description: `Consulte horários, paradas e tarifas da rota ${linha.nome} operada pela Porto de Registro no Vale do Ribeira.`,
   };
 }
 
@@ -123,11 +123,6 @@ export default async function LinhaDetailPage({ params }: Props) {
 
       <section className="linha-hero">
         <div className="container">
-          <div className="linha-hero__badge-row">
-            <span className="badge badge--dourado linha-hero__badge">
-              {linhaOrig.codigo}
-            </span>
-          </div>
           <h1 className="linha-hero__title">
             {linhaOrig.nome}
           </h1>
