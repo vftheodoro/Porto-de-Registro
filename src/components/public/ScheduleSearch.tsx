@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import type { ResultadoBusca, TipoDia } from '@/types';
-import { ArrowLeftRight, Coins, Bus, Search } from 'lucide-react';
+import { ArrowLeftRight, Coins, Bus, Search, Clock } from 'lucide-react';
 
 interface Parada {
   id: number;
@@ -169,7 +169,11 @@ export default function ScheduleSearch() {
                       {r.linha.nome}
                     </div>
                     <div style={{ fontSize: '0.875rem', color: 'var(--cinza-600)', marginTop: '0.25rem' }}>
-                      {r.tempo_estimado && `⏱ ${r.tempo_estimado} min`}
+                      {r.tempo_estimado && (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                          <Clock size={14} /> {r.tempo_estimado} min
+                        </span>
+                      )}
                       {r.tarifa && (
                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
                           {' · '} <Coins size={14} /> R$ {r.tarifa.toFixed(2)}

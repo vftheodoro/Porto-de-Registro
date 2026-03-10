@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import type { Linha, Horario, LinhaParadaComDetalhes, TarifaComDetalhes, TipoDia } from '@/types';
-import { Clock, MapPin, Coins, Bus } from 'lucide-react';
+import { Clock, MapPin, Coins, Bus, FileDown } from 'lucide-react';
 
 interface Props {
   linha: Linha;
@@ -78,7 +78,8 @@ export default function LinhaDetailClient({ linha, paradas, horarios, tarifas }:
                 ))}
               </div>
               <button className="btn btn--secondary btn--sm" onClick={downloadPDF}>
-                📄 Baixar PDF
+                <FileDown size={16} style={{ display: 'inline', marginRight: 6, verticalAlign: 'middle' }} />
+                Baixar PDF
               </button>
             </div>
 

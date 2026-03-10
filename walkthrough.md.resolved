@@ -1,0 +1,125 @@
+# Porto de Registro — Conclusão da Implementação
+
+Este documento detalha o que foi concluído na criação do site para a **Porto de Registro**, focando na arquitetura _Serverless_ com Git-CMS escolhida para funcionar 100% gratuitamente na Vercel.
+
+---
+
+## 🏗️ Arquitetura Final: "Git-CMS" com JSON Local
+
+Conforme discutido, a opção por **hospedagem gratuita na Vercel sem bancos de dados externos** exigiu o abandono do Painel Administrativo. A Vercel não permite salvar alterações em arquivos locais porque o servidor reseta a cada acesso (_Serverless ephemeral filesystem_).
+
+**A Solução Escalonável e Gratuita:**
+Toda a inteligência e os dados do site (horários, paradas, linhas, preços e alertas) foram movidos para um único arquivo na raiz do projeto: [data.json](file:///c:/Users/fatec-dsm1/Desktop/Porto%20de%20Registro/data.json).
+O site Next.js lê esse arquivo no momento em que alguém acessa a página, sem depender de banco SQL ou APIs externas.
+
+### Como você atualizará os dados?
+
+Sempre que uma linha mudar de horário ou houver uma interdição na rodovia:
+
+1. Você edita o arquivo [data.json](file:///c:/Users/fatec-dsm1/Desktop/Porto%20de%20Registro/data.json) no seu computador.
+2. Abre o terminal e executa: `node scripts/validate.js` (para garantir que você não esqueceu uma vírgula ou errou o formato da hora).
+3. Faz um _commit_ e _push_ para o GitHub.
+4. A Vercel detecta a mudança e atualiza o site ao vivo em menos de 1 minuto.
+
+---
+
+## ✅ O que foi entregue no Site Público (Frontend)
+
+Construí todas as páginas com foco extremo em **performance e acessibilidade para conexões lentas (3G)**, utilizando Next.js App Router (14) e CSS Custom Properties puro (sem Tailwind, mantendo o bundle minúsculo).
+
+### 1. Identidade Visual e Design System
+
+O site respeita o briefing utilizando as cores primárias **Verde Escuro** e **Dourado**, gerando um visual sério, de transporte corporativo e confiável. O design base é totalmente adaptado para celular (mobile-first), já que a grande maioria dos passageiros buscará horários pelo smartphone nas rodoviárias.
+
+### 2. Motor de Busca de Horários (`/`, `/horarios`)
+
+Desenvolvi um componente inteligente de busca:
+
+- O passageiro seleciona a cidade de **Origem**.
+- O select de **Destino** filtra automaticamente para exibir apenas cidades que tenham rotas diretas a partir daquela origem.
+- Botão rápido de "Ida e Volta" (⇄) inverte origem e destino.
+- Abas rápidas separam os resultados por "Dias Úteis", "Sábados", "Domingos" e "Feriados".
+- A tabela de resultados calcula dinamicamente a **estimativa do horário de chegada** no destino, baseada no tempo de cada parada registrado no arquivo JSON.
+- A tarifa do trecho exato pesquisado também já aparece sob o nome da linha.
+
+### 3. Visão Detalhada da Linha (`/linhas/[slug]`)
+
+Página Server-rendered (SEO amigável) e interativa:
+
+- Nome e trajeto principal em evidência.
+- Sistema de 3 abas para não poluir a tela no celular:
+  1. **🕐 Horários**: Exibe tabelas filtráveis por tipo de dia.
+  2. **📍 Paradas**: Exibe uma _Linha do Tempo Visual_ limpa, mostrando cada cidade/rodoviária daquela rota e o tempo estimado de viagem relativo à origem.
+  3. **💰 Tarifas**: Tabela compreensível com todos os cortes seccionais da linha.
+
+### 4. Gerador de PDF Integrado (`/api/public/pdf`)
+
+Como motoristas e rodoviárias perdem muito tempo compartilhando fotos de planilhas borradas pelo WhatsApp, criei um sistema nativo de geração de PDF.
+
+- A rota carrega o `jspdf` no servidor.
+- O passageiro clica em "Baixar PDF" na tabela de horários.
+- Um PDF profissional, com o logo da empresa e a paleta verde/dourada é gerado na hora com uma tabela limpa dos horários filtrados, pronto para ser mandado no grupo do WhatsApp da família ou impresso no guichê.
+
+### 5. Sistema de Avisos Urgentes (Alert Banners)
+
+Qualquer aviso adicionado ao array `avisos` no arquivo JSON com o `ativo: true` renderizará um banner superior no site.
+Sinalizações visuais semânticas:
+
+- `URGENTE`: Vermelho escuro de alerta (ex: Interdição na BR-116).
+- `INFORMATIVO`: Ouro/Amarelo de aviso (ex: Mudança de ponto de ônibus).
+- `FERIADO`: Azul neutro (ex: Operação de fim de ano).
+
+### 6. Demais Páginas
+
+- **Matriz de Tarifas (`/tarifas`)**: Compilação global de todas as tabelas de preços registradas, organizadas pelas linhas, de fácil escaneabilidade no celular.
+- **Sobre Nós (`/sobre`)**: Institucional moderno contendo pilares operacionais, história e canais de atendimento físico/WhatsApp em Registro.
+
+---
+
+## ✨ Identidade Visual e Polimento Profissional
+
+O site foi submetido a um intenso refinamento estético:
+
+- As logos oficiais ([logo_completa_pr.png](file:///c:/Users/fatec-dsm1/Desktop/Porto%20de%20Registro/public/images/logo_completa_pr.png)) foram devidamente integradas ao Header e ao Footer em alta resolução (preservando o `contain` e o `height` consistente).
+- O Header foi otimizado para não "camuflar" a logo verde escura perante ao fundo verde característico do app: **Adicionei um `drop-shadow` limpo com brilho branco**, o que destaca a arte visualmente sem necessidade de edições destrutivas de imagem.
+- **Remoção de Emojis do layout base:** Emojis são pouco acessíveis em aparelhos defasados e não passam "credibilidade corporativa". A biblioteca `lucide-react` foi adicionada e os emojis do Motor de Busca, Abas, Cards de Rotas e página de "Sobre" e "Contato" foram convertidos para ícones SVG em linha premium.
+
+### 🎥 Demonstração de Layout do App Final (Gravado pelo Agente Web)
+
+As gravações abaixo provam a coesão do design rodando via Google Chrome subagent. Foram capturadas após as validações da UI final:
+
+![Review de interface interagindo no Header/Logo](C:/Users/fatec-dsm1/.gemini/antigravity/brain/be7477da-e2a2-4b15-949d-317d0d6428e3/site_review_with_logos_1773096763981.webp)
+
+![Review de Busca com icones em formato SVG limpo](C:/Users/fatec-dsm1/.gemini/antigravity/brain/be7477da-e2a2-4b15-949d-317d0d6428e3/final_review_with_lucide_icons_1773097030315.webp)
+
+### ⚪ Implementação de Logos com Alto Contraste (Brancas)
+
+Após recebermos as variações brancas das logos da empresa, o layout foi atualizado para otimizar o contraste nos elementos escuros:
+
+- **Header (Fundo Verde Escuro):** Substituímos a logo verde por [logo_escrita_branca_pr.png](file:///c:/Users/fatec-dsm1/Desktop/Porto%20de%20Registro/public/images/logo_escrita_branca_pr.png), eliminando a necessidade de sombras pesadas e deixando a barra visualmente mais profissional.
+- **Footer (Fundo Grafite/Cinza 900):** Substituímos pela versão simplificada [logo_porto_branca.png](file:///c:/Users/fatec-dsm1/Desktop/Porto%20de%20Registro/public/images/logo_porto_branca.png) (símbolo "P" estilizado), ideal para fixar a marca no final da página sem tomar muito espaço.
+
+Gravação da validação de contraste do layout:
+![Review do Contraste das Logos Brancas](C:/Users/fatec-dsm1/.gemini/antigravity/brain/be7477da-e2a2-4b15-949d-317d0d6428e3/firm_logos_white_validation_1773097832489.webp)
+
+### 🤝 Parceria Grupo Rápido Perus
+
+Conforme a atual governança da empresa, incluímos os devidos créditos de integração ao **Grupo Rápido Perus**:
+
+- Adicionamos na página "Sobre", na seção Nossa História, um card de destaque apontando que a estrutura é administrada pela Rápido Perus.
+- Adicionamos no Footer a sinalização "Uma empresa Grupo Rápido Perus", consolidando a marca do conglomerado visualmente em todas as páginas do site.
+
+Ambos os destaques possuem a logo oficial da parceira e linkam externamente para `https://www.rapidoperus.com.br/`.
+
+Verificação visual do novo layout corporativo no Footer:
+![Footer Institucional Completo](C:/Users/fatec-dsm1/.gemini/antigravity/brain/be7477da-e2a2-4b15-949d-317d0d6428e3/footer_verification_1773098216929.png)
+
+---
+
+## 🛠️ Detalhes Técnicos
+
+- **Zero Client-side Fetching Múltiplo:** Para as principais views (exceto a busca em si), os dados são embutidos nas páginas via SSR usando o helper construído em [src/lib/db.ts](file:///c:/Users/fatec-dsm1/Desktop/Porto%20de%20Registro/src/lib/db.ts).
+- **Descarte Total de Pacotes Pesados:** Removi bibliotecas que não serão mais utilizadas para garantir velocidade máxima no _build time_ (Node auth, `better-sqlite3`, `zod`, `bcryptjs`).
+- O site está devidamente configurado com as tags de Metadados base (SEO orgânico) voltadas para o Google Search.
+
+Todas as modificações podem agora ser validadas rodando a aplicação na máquina local. O próximo passo de responsabilidade externa é vincular e aplicar as regras de DNS do domínio real fornecido (`portoderegistro.com.br`) ao projeto da Vercel.

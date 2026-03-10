@@ -1378,6 +1378,82 @@ textarea {
   font-weight: 500;
 }
 
+/* Admin login (acesso restrito) */
+.admin-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cinza-100);
+  padding: var(--esp-4);
+}
+.admin-login__card {
+  background: var(--branco);
+  border-radius: var(--raio-xl);
+  box-shadow: var(--sombra-lg);
+  padding: var(--esp-8);
+  width: 100%;
+  max-width: 380px;
+}
+.admin-login__header {
+  text-align: center;
+  margin-bottom: var(--esp-6);
+  color: var(--verde-800);
+}
+.admin-login__header h1 {
+  font-size: var(--texto-xl);
+  margin: var(--esp-2) 0 var(--esp-1);
+}
+.admin-login__header p {
+  font-size: var(--texto-sm);
+  color: var(--cinza-600);
+  margin: 0;
+}
+.admin-login__form label {
+  display: block;
+  font-size: var(--texto-sm);
+  font-weight: 600;
+  color: var(--cinza-700);
+  margin-bottom: var(--esp-2);
+}
+.admin-login__form input {
+  width: 100%;
+  padding: var(--esp-3) var(--esp-4);
+  border: 1px solid var(--cinza-300);
+  border-radius: var(--raio-md);
+  font-size: var(--texto-base);
+  margin-bottom: var(--esp-4);
+  box-sizing: border-box;
+}
+.admin-login__form input:focus {
+  outline: none;
+  border-color: var(--verde-500);
+  box-shadow: 0 0 0 2px rgba(45, 138, 70, 0.2);
+}
+.admin-login__error {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-2);
+  padding: var(--esp-3);
+  background: var(--vermelho-claro);
+  color: var(--vermelho-escuro);
+  border-radius: var(--raio-md);
+  font-size: var(--texto-sm);
+  margin-bottom: var(--esp-4);
+}
+.admin-login__back {
+  text-align: center;
+  margin-top: var(--esp-6);
+  font-size: var(--texto-sm);
+}
+.admin-login__back a {
+  color: var(--cinza-600);
+  text-decoration: none;
+}
+.admin-login__back a:hover {
+  color: var(--verde-600);
+}
+
 /* ==========================================
    Toggle Switch
    ========================================== */
