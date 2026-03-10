@@ -6,7 +6,7 @@ import { classificarAvisosPublicos } from '@/lib/avisos-publicos';
 import type { LinhaCompleta } from '@/types';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { MapPin } from 'lucide-react';
+import { MapPin, BusFront, CalendarDays, Route } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Linhas de Ônibus | Porto de Registro',
@@ -18,6 +18,7 @@ export const revalidate = 60;
 export default async function LinhasPage() {
   const db = getDb();
   const { notificacoes } = classificarAvisosPublicos(db.avisos);
+  const cidadesUnicas = new Set(db.paradas.map((p) => p.cidade)).size;
 
   const linhas = db.linhas.filter(l => l.ativa).map(linha => {
      const cidades = new Set<string>();
@@ -37,18 +38,52 @@ export default async function LinhasPage() {
      } as LinhaCompleta;
   }).sort((a, b) => a.codigo.localeCompare(b.codigo));
 
+  const totalSaidas = linhas.reduce(
+    (acc, linha) => acc + linha.qtd_util + linha.qtd_sabado + linha.qtd_domingo,
+    0
+  );
+
   return (
     <>
       <AlertBanner avisos={notificacoes} />
       <Header />
 
-      <section className="section">
+      <section className="section linhas-page">
         <div className="container">
           <div className="section__header">
             <h1 className="section__title">Todas as Linhas</h1>
             <p className="section__subtitle">
-              {linhas.length} linhas atendendo o Vale do Ribeira
+              Consulta clara e equilibrada das rotas ativas no Vale do Ribeira
             </p>
+            <p style={{ marginTop: '0.75rem' }}>
+              <Link href="/rodoviarias" className="btn btn--secondary btn--sm">
+                Consultar rodoviarias e contatos
+              </Link>
+            </p>
+          </div>
+
+          <div className="linhas-overview" role="list" aria-label="Resumo operacional">
+            <article className="linhas-overview__item" role="listitem">
+              <div className="linhas-overview__icon"><BusFront size={18} /></div>
+              <div>
+                <p className="linhas-overview__label">Linhas ativas</p>
+                <strong className="linhas-overview__value">{linhas.length}</strong>
+              </div>
+            </article>
+            <article className="linhas-overview__item" role="listitem">
+              <div className="linhas-overview__icon"><Route size={18} /></div>
+              <div>
+                <p className="linhas-overview__label">Cidades atendidas</p>
+                <strong className="linhas-overview__value">{cidadesUnicas}</strong>
+              </div>
+            </article>
+            <article className="linhas-overview__item" role="listitem">
+              <div className="linhas-overview__icon"><CalendarDays size={18} /></div>
+              <div>
+                <p className="linhas-overview__label">Saídas cadastradas</p>
+                <strong className="linhas-overview__value">{totalSaidas}</strong>
+              </div>
+            </article>
           </div>
 
           <div className="routes-grid">
@@ -60,23 +95,20 @@ export default async function LinhasPage() {
               >
                 <div className="route-card__code">{linha.codigo}</div>
                 <div className="route-card__name">{linha.nome}</div>
-                <div className="route-card__cities" style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                <div className="route-card__cities route-card__cities--icon">
                   <MapPin size={16} /> {linha.cidades.split(', ').join(' → ')}
                 </div>
                 {linha.descricao && (
-                  <p style={{ fontSize: '0.85rem', color: 'var(--cinza-600)', marginBottom: '1rem' }}>
+                  <p className="route-card__description">
                     {linha.descricao}
                   </p>
                 )}
                 <div className="route-card__badges">
-                  <span className="badge badge--verde">{linha.qtd_util} horários</span>
-                  {linha.qtd_sabado > 0 && (
-                    <span className="badge badge--dourado">Sábado</span>
-                  )}
-                  {linha.qtd_domingo > 0 && (
-                    <span className="badge badge--cinza">Dom/Fer</span>
-                  )}
+                  <span className="badge badge--verde">Util: {linha.qtd_util}</span>
+                  <span className="badge badge--dourado">Sab: {linha.qtd_sabado}</span>
+                  <span className="badge badge--cinza">Dom/Fer: {linha.qtd_domingo}</span>
                 </div>
+                <span className="route-card__cta">Ver detalhes da linha →</span>
               </Link>
             ))}
           </div>

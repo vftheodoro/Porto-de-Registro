@@ -1,71 +1,165 @@
-# Porto de Registro — Horários de Ônibus
+# Porto de Registro - Sistema de Horarios e Atendimento
 
-Site institucional e operacional da **Porto de Registro**, empresa de transporte intermunicipal de ônibus no Vale do Ribeira (SP). O site permite consultar horários, rotas, tarifas e avisos operacionais.
+Aplicacao web institucional e operacional da Porto de Registro para consulta de horarios, linhas, tarifas, avisos e informacoes de atendimento no Vale do Ribeira.
 
-## Tecnologias
+## Analise Atual do Site
 
-- **Next.js 16** (App Router)
-- **React 19**
-- **TypeScript**
-- CSS com variáveis (design system verde/dourado)
-- Dados em `data.json` (Git-CMS — sem banco de dados)
+Status geral: estavel e funcional, com boa cobertura de fluxos publicos e painel admin operando com autenticacao por cookie assinado.
 
-## Como rodar
+Pontos fortes:
+- Busca inteligente com rotas diretas e conexoes.
+- Filtro dinamico de destinos validos por origem e tipo de dia.
+- Leitura de horario em tempo real no cliente (proximo horario, passado/futuro).
+- Geracao de PDF operacional pronta para impressao.
+- Painel admin para manutencao de `data.json`.
+- Testes automatizados para rotas criticas (`busca` e `destinos`) e validacao estrutural de dados.
+
+Pontos de atencao:
+- Tentativa de login admin sem limite de taxa (rate-limit).
+- Comparacao de senha admin direta (sem hash e sem tempo constante).
+- Middleware do Next com aviso de deprecacao para migracao futura para `proxy`.
+- Em producao (Vercel), gravacao local de arquivo nao e permitida e depende de fluxo manual de download/commit do JSON.
+
+## Stack Tecnica
+
+- Next.js 16 (App Router)
+- React 19
+- TypeScript
+- CSS global com design system
+- Vitest
+- ESLint
+- jsPDF + jspdf-autotable
+- Base de dados em arquivo (`data.json`)
+
+## Numeros do Projeto (data.json)
+
+- Paradas: 12
+- Linhas: 9
+- Linhas ativas: 9
+- Avisos: 6
+- Cidades cobertas: 12
+- Horarios cadastrados: 250
+- Tarifas cadastradas: 30
+
+## Paginas Publicas
+
+- `/` Home com avisos, busca principal, frota, linhas e area do passageiro.
+- `/horarios` Busca inteligente focada em planejamento de viagem.
+- `/linhas` Lista de linhas com resumo operacional.
+- `/linhas/[slug]` Detalhe da linha (ida/volta, horarios, paradas, tarifas, PDF).
+- `/tarifas` Tabela de tarifas por linha + politicas de pagamento.
+- `/atendimento` Central de servicos para passageiro.
+- `/rodoviarias` Base de terminais/rodoviarias com nivel de confianca e fontes.
+- `/sobre` Historia, pilares e contatos institucionais.
+
+## APIs Publicas
+
+- `GET /api/public/paradas`
+   - Retorna cidades/paradas usadas por linhas ativas (sem duplicidade de cidade).
+
+- `GET /api/public/destinos?origem=...&tipo=...`
+   - Retorna apenas destinos alcancaveis para aquela origem e tipo de dia.
+
+- `GET /api/public/busca?origem=...&destino=...&tipo=...`
+   - Retorna `resultados` (direto) e `conexoes` (quando nao ha direto).
+   - Regra importante: se existir opcao direta valida, conexoes sao suprimidas.
+
+- `GET /api/public/linhas`
+   - Lista linhas ativas em payload leve para listagem.
+
+- `GET /api/public/avisos`
+   - Suporta grupos (`informativos`, `todos`) alem do default operacional.
+
+- `GET /api/public/pdf?linha_id=...&tipo=...`
+   - Gera PDF com horarios, chegada estimada, tarifas e observacoes.
+
+## Painel Administrativo
+
+Paginas:
+- `/admin`
+- `/admin/avisos`
+- `/admin/paradas`
+- `/admin/linhas`
+- `/admin/linhas/[id]`
+- `/admin/login`
+
+APIs:
+- `POST /api/admin/login`
+- `POST /api/admin/logout`
+- `GET /api/admin/data`
+- `POST /api/admin/data`
+
+Seguranca atual:
+- Middleware protege `/admin/:path*` (exceto login).
+- Sessao por cookie `HttpOnly` assinado com HMAC (`ADMIN_SECRET`).
+
+Observacao operacional:
+- Em dev, `POST /api/admin/data` grava `data.json` no disco.
+- Em Vercel, a API retorna orientacao para baixar JSON e commitar no Git.
+
+## Regras de Negocio Relevantes
+
+- Tipo de dia: `UTIL`, `SABADO`, `DOMINGO`, `FERIADO`.
+- Deteccao automatica do tipo de dia no cliente com feriados nacionais fixos e moveis.
+- Conexao exige tempo minimo de transferencia.
+- Destinos mostrados no front dependem da origem e do tipo de dia.
+- Estado da busca e sincronizado entre Home e pagina de Horarios via `localStorage`.
+
+## Estrutura de Projeto
+
+- `data.json`: base principal de operacao.
+- `scripts/validate.js`: validacao estrutural e semantica de dados.
+- `src/app`: paginas App Router + APIs.
+- `src/components`: componentes publicos e admin.
+- `src/lib`: utilitarios de dados, auth, planner de rotas.
+- `src/types`: contratos TypeScript.
+- `test`: testes de API e validacao.
+
+## Como Rodar
 
 ```bash
-# Instalar dependências
 npm install
-
-# Desenvolvimento (com Turbopack)
 npm run dev
 ```
 
-Acesse [http://localhost:3000](http://localhost:3000).
-
-## Como atualizar os dados (horários, linhas, avisos)
-
-Os dados do site vêm do arquivo **`data.json`** na raiz do projeto. Para alterar horários, paradas, tarifas ou avisos:
-
-1. **Edite** o arquivo `data.json` no seu editor.
-2. **Valide** o JSON antes de enviar:
-   ```bash
-   node scripts/validate.js
-   ```
-   O script verifica estrutura, IDs de paradas, formato de horários (HH:MM), tipos de dia (UTIL, SABADO, DOMINGO, FERIADO) e tarifas. Corrija qualquer erro exibido.
-3. **Commit e push** para o repositório. Se o projeto estiver conectado à Vercel, o site será atualizado automaticamente após o deploy.
+Aplicacao local: `http://localhost:3000`
 
 ## Scripts
 
-| Comando | Descrição |
-|--------|-----------|
-| `npm run dev` | Servidor de desenvolvimento (Turbopack) |
-| `npm run build` | Build de produção |
-| `npm run start` | Servidor de produção (após `build`) |
-| `npm run lint` | ESLint |
-| `npm run test` | Testes automatizados (Vitest) |
-| `npm run test:watch` | Testes em modo watch |
-| `node scripts/validate.js` | Valida o `data.json` antes de commitar |
+| Comando | Uso |
+|---|---|
+| `npm run dev` | Desenvolvimento local |
+| `npm run build` | Build de producao |
+| `npm run start` | Servidor de producao local |
+| `npm run lint` | Lint |
+| `npm run test` | Testes |
+| `npm run test:watch` | Testes em watch |
+| `node scripts/validate.js` | Validar `data.json` |
 
-## Área administrativa (restrita)
+## Configuracao de Ambiente
 
-Existe um painel em **`/admin`** para editar avisos, paradas e linhas (horários e tarifas). Ele **não aparece em nenhum link do site** — apenas quem souber o endereço e tiver a senha pode acessar.
+Crie `.env.local`:
 
-1. Crie um arquivo **`.env.local`** na raiz (copie de `.env.example`):
-   - `ADMIN_PASSWORD` — senha forte para entrar no painel.
-   - `ADMIN_SECRET` — chave secreta com pelo menos 16 caracteres (para assinatura do cookie de sessão).
-2. Acesse **http://localhost:3000/admin** (ou seu domínio/admin). Você será redirecionado para a tela de login.
-3. Em **desenvolvimento**, ao salvar no admin, o `data.json` é atualizado no disco. Em **produção (Vercel)** o sistema não pode gravar arquivo; use o botão "Baixar data.json" e faça commit no GitHub com o conteúdo baixado.
+```env
+ADMIN_PASSWORD=sua_senha_forte
+ADMIN_SECRET=uma_chave_longa_com_16_ou_mais_chars
+```
 
-**Segurança:** o painel é protegido por senha e cookie assinado. Não divulgue a URL nem a senha.
+## Qualidade e Validacao
 
-## Estrutura principal
+Checklist recomendado antes de deploy:
+- `node scripts/validate.js`
+- `npm run test`
+- `npm run build`
 
-- **`data.json`** — Fonte de dados (paradas, linhas com horários e tarifas, avisos).
-- **`src/app/`** — Páginas: `/` (home + busca), `/horarios`, `/linhas`, `/linhas/[slug]`, `/tarifas`, `/sobre`; `/admin` (painel restrito).
-- **`src/app/api/public/`** — APIs: paradas, busca (origem/destino/tipo de dia), PDF de horários.
-- **`src/app/api/admin/`** — Login, logout e leitura/gravação de dados (protegidos por autenticação).
-- **`src/lib/db.ts`** — Leitura do `data.json` no servidor.
+## Deploy
 
-## Deploy (Vercel)
+Deploy recomendado: Vercel.
 
-O projeto está preparado para deploy na Vercel. Conecte o repositório e faça o deploy; o build usa `next build`. Para domínio customizado (ex.: portoderegistro.com.br), configure o DNS no painel da Vercel.
+Observacao importante: como a escrita em arquivo local nao funciona em runtime serverless, o fluxo de atualizacao de dados em producao deve considerar download do JSON pelo admin e commit no repositorio.
+
+## Documentacao Completa
+
+Foi gerado o arquivo detalhado em texto na raiz:
+
+- `DOCUMENTACAO_COMPLETA.txt`

@@ -2,6 +2,7 @@ import Header from '@/components/public/Header';
 import Footer from '@/components/public/Footer';
 import { getDb } from '@/lib/db';
 import type { Metadata } from 'next';
+import { CreditCard, QrCode, Banknote, Building2, Bus } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Tarifas e Valores | Porto de Registro',
@@ -40,18 +41,47 @@ export default async function TarifasPage() {
     <>
       <Header />
 
-      <section className="section">
+      <section className="section tarifas-page">
         <div className="container">
           <div className="section__header">
             <h1 className="section__title">Tarifas e Preços</h1>
             <p className="section__subtitle">
-              Consulte os valores das passagens para os trechos operados
+              Consulte os valores por trecho e as formas de pagamento aceitas
             </p>
           </div>
 
-          <div style={{ maxWidth: 800, margin: '0 auto' }}>
+          <section className="pagamento-policy" aria-label="Formas de pagamento">
+            <div className="pagamento-policy__header">
+              <h2 className="pagamento-policy__title">Formas de pagamento</h2>
+              <p className="pagamento-policy__subtitle">Importante: a forma de pagamento muda conforme o local de embarque</p>
+            </div>
+
+            <div className="pagamento-policy__grid">
+              <article className="pagamento-card pagamento-card--terminal">
+                <div className="pagamento-card__top">
+                  <Building2 size={18} /> Na rodoviaria
+                </div>
+                <div className="pagamento-card__methods">
+                  <span className="pagamento-method"><QrCode size={15} /> Pix</span>
+                  <span className="pagamento-method"><CreditCard size={15} /> Cartao</span>
+                  <span className="pagamento-method"><Banknote size={15} /> Dinheiro</span>
+                </div>
+              </article>
+
+              <article className="pagamento-card pagamento-card--onibus">
+                <div className="pagamento-card__top">
+                  <Bus size={18} /> No onibus (fora da rodoviaria)
+                </div>
+                <div className="pagamento-card__methods">
+                  <span className="pagamento-method pagamento-method--only-cash"><Banknote size={15} /> Somente dinheiro fisico</span>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <div className="tarifas-list">
             {linhasComTarifas.map((linha) => (
-              <div key={linha.id} className="results" style={{ marginBottom: '2rem' }}>
+              <div key={linha.id} className="results tarifas-list__item">
                 <div className="results__header">
                   <div>
                     <div className="results__title">{linha.nome}</div>

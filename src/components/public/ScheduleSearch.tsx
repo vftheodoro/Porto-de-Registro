@@ -10,6 +10,8 @@ interface Parada {
   cidade: string;
 }
 
+const SEARCH_STATE_STORAGE_KEY = 'porto-search-state-v1';
+
 function toMin(hhmm: string): number {
   const [hh, mm] = hhmm.split(':').map(Number);
   return hh * 60 + mm;
@@ -23,8 +25,67 @@ function toHHMM(totalMin: number): string {
   return `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
 }
 
-function getTodayTipoDia(): TipoDia {
-  const day = new Date().getDay();
+function getEasterDate(year: number): Date {
+  // Anonymous Gregorian algorithm.
+  const a = year % 19;
+  const b = Math.floor(year / 100);
+  const c = year % 100;
+  const d = Math.floor(b / 4);
+  const e = b % 4;
+  const f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3);
+  const h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4);
+  const k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const month = Math.floor((h + l - 7 * m + 114) / 31) - 1; // 0-based
+  const day = ((h + l - 7 * m + 114) % 31) + 1;
+  return new Date(year, month, day);
+}
+
+function addDays(base: Date, days: number): Date {
+  const d = new Date(base);
+  d.setDate(d.getDate() + days);
+  return d;
+}
+
+function dateKey(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function isBrazilNationalHoliday(date: Date): boolean {
+  const year = date.getFullYear();
+
+  const fixed = new Set([
+    `${year}-01-01`, // Confraternizacao Universal
+    `${year}-04-21`, // Tiradentes
+    `${year}-05-01`, // Dia do Trabalho
+    `${year}-09-07`, // Independencia
+    `${year}-10-12`, // Nossa Senhora Aparecida
+    `${year}-11-02`, // Finados
+    `${year}-11-15`, // Proclamacao da Republica
+    `${year}-11-20`, // Dia da Consciencia Negra (nacional)
+    `${year}-12-25`, // Natal
+  ]);
+
+  const easter = getEasterDate(year);
+  const movable = new Set([
+    dateKey(addDays(easter, -48)), // Carnaval (segunda)
+    dateKey(addDays(easter, -47)), // Carnaval (terca)
+    dateKey(addDays(easter, -2)), // Sexta-feira Santa
+    dateKey(easter), // Pascoa
+    dateKey(addDays(easter, 60)), // Corpus Christi
+  ]);
+
+  const key = dateKey(date);
+  return fixed.has(key) || movable.has(key);
+}
+
+function getTodayTipoDia(baseDate?: Date): TipoDia {
+  const date = baseDate ?? new Date();
+  if (isBrazilNationalHoliday(date)) return 'FERIADO';
+  const day = date.getDay();
   if (day === 0) return 'DOMINGO';
   if (day === 6) return 'SABADO';
   return 'UTIL';
@@ -34,7 +95,7 @@ export default function ScheduleSearch() {
   const [paradas, setParadas] = useState<Parada[]>([]);
   const [origem, setOrigem] = useState('');
   const [destino, setDestino] = useState('');
-  const [tipoDia, setTipoDia] = useState<TipoDia>('UTIL');
+  const [tipoDia, setTipoDia] = useState<TipoDia>(() => getTodayTipoDia(new Date()));
   const [resultados, setResultados] = useState<ResultadoBusca[]>([]);
   const [conexoes, setConexoes] = useState<RotaConexaoBusca[]>([]);
   const [destinosPermitidos, setDestinosPermitidos] = useState<string[]>([]);
@@ -43,6 +104,7 @@ export default function ScheduleSearch() {
   const [searched, setSearched] = useState(false);
   const [error, setError] = useState('');
   const [agora, setAgora] = useState<Date>(new Date());
+  const [shouldAutoSearch, setShouldAutoSearch] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -57,6 +119,36 @@ export default function ScheduleSearch() {
       .then((res) => res.json())
       .then((data) => setParadas(data))
       .catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const raw = window.localStorage.getItem(SEARCH_STATE_STORAGE_KEY);
+      if (!raw) return;
+
+      const parsed = JSON.parse(raw) as {
+        origem?: string;
+        destino?: string;
+        tipoDia?: TipoDia;
+      };
+
+      if (parsed.tipoDia && ['UTIL', 'SABADO', 'DOMINGO', 'FERIADO'].includes(parsed.tipoDia)) {
+        setTipoDia(parsed.tipoDia);
+      }
+      if (typeof parsed.origem === 'string') {
+        setOrigem(parsed.origem);
+      }
+      if (typeof parsed.destino === 'string') {
+        setDestino(parsed.destino);
+      }
+
+      if (parsed.origem && parsed.destino) {
+        setShouldAutoSearch(true);
+      }
+    } catch {
+      // Ignore invalid persisted payload.
+    }
   }, []);
 
   // Get unique cities
@@ -88,6 +180,18 @@ export default function ScheduleSearch() {
     }
   }, [destinosPermitidos, destino]);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      window.localStorage.setItem(
+        SEARCH_STATE_STORAGE_KEY,
+        JSON.stringify({ origem, destino, tipoDia })
+      );
+    } catch {
+      // Non-blocking for browsers with disabled storage.
+    }
+  }, [origem, destino, tipoDia]);
+
   const buscar = useCallback(async () => {
     if (!origem || !destino) return;
     setLoading(true);
@@ -112,6 +216,25 @@ export default function ScheduleSearch() {
       setLoading(false);
     }
   }, [origem, destino, tipoDia]);
+
+  useEffect(() => {
+    if (!shouldAutoSearch) return;
+    if (loadingDestinos || loading || searched) return;
+    if (!origem || !destino) return;
+    if (!destinosPermitidos.includes(destino)) return;
+
+    setShouldAutoSearch(false);
+    void buscar();
+  }, [
+    shouldAutoSearch,
+    loadingDestinos,
+    loading,
+    searched,
+    origem,
+    destino,
+    destinosPermitidos,
+    buscar,
+  ]);
 
   const trocar = () => {
     const tmp = origem;

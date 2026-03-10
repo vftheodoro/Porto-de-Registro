@@ -108,3 +108,19 @@ export interface BuscaResponse {
   resultados: ResultadoBusca[];
   conexoes?: RotaConexaoBusca[];
 }
+
+export interface RodoviariaFonte {
+  label: string;
+  url: string;
+}
+
+export interface RodoviariaInfo {
+  cidade: string;
+  nome: string;
+  endereco: string;
+  telefone: string;
+  funcionamento: string;
+  observacoes: string;
+  nivel_confianca: 'alto' | 'medio' | 'baixo';
+  fontes: RodoviariaFonte[];
+}

@@ -13,6 +13,7 @@ export default function Header() {
   const links = [
     { href: '/', label: 'Início' },
     { href: '/horarios', label: 'Horários' },
+    { href: '/rodoviarias', label: 'Rodoviárias' },
     { href: '/atendimento', label: 'Atendimento' },
     { href: '/linhas', label: 'Linhas' },
     { href: '/tarifas', label: 'Tarifas' },

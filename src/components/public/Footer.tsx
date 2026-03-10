@@ -44,6 +44,7 @@ export default function Footer() {
               <li><Link href="/" className="footer__link">Início</Link></li>
               <li><Link href="/horarios" className="footer__link">Horários</Link></li>
               <li><Link href="/atendimento" className="footer__link">Atendimento</Link></li>
+              <li><Link href="/rodoviarias" className="footer__link">Rodoviárias</Link></li>
               <li><Link href="/linhas" className="footer__link">Linhas</Link></li>
               <li><Link href="/tarifas" className="footer__link">Tarifas</Link></li>
               <li><Link href="/sobre" className="footer__link">Sobre</Link></li>

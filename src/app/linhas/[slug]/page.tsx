@@ -2,7 +2,7 @@ import Header from '@/components/public/Header';
 import Footer from '@/components/public/Footer';
 import { getDb } from '@/lib/db';
 import { notFound } from 'next/navigation';
-import type { LinhaParadaComDetalhes, TarifaComDetalhes } from '@/types';
+import type { Linha, LinhaParadaComDetalhes, TarifaComDetalhes } from '@/types';
 import type { Metadata } from 'next';
 import LinhaDetailClient from './LinhaDetailClient';
 
@@ -33,12 +33,36 @@ export async function generateStaticParams() {
   }));
 }
 
+function getParadasOrdenadas(linha: Linha) {
+  return [...linha.paradas].sort((a, b) => a.ordem - b.ordem);
+}
+
+function findLinhaVolta(db: ReturnType<typeof getDb>, linha: Linha): Linha | null {
+  const paradasLinha = getParadasOrdenadas(linha);
+  if (paradasLinha.length < 2) return null;
+
+  const origemIda = paradasLinha[0].parada_id;
+  const destinoIda = paradasLinha[paradasLinha.length - 1].parada_id;
+
+  const candidata = db.linhas.find((l) => {
+    if (!l.ativa || l.id === linha.id) return false;
+    const ps = getParadasOrdenadas(l);
+    if (ps.length < 2) return false;
+    const origemVolta = ps[0].parada_id;
+    const destinoVolta = ps[ps.length - 1].parada_id;
+    return origemVolta === destinoIda && destinoVolta === origemIda;
+  });
+
+  return candidata || null;
+}
+
 export default async function LinhaDetailPage({ params }: Props) {
   const { slug } = await params;
   const db = getDb();
 
   const linhaOrig = db.linhas.find(l => l.slug === slug && l.ativa);
   if (!linhaOrig) notFound();
+  const linhaVolta = findLinhaVolta(db, linhaOrig);
 
   // Populate data using lookups
   const paradas: LinhaParadaComDetalhes[] = linhaOrig.paradas.map(lp => {
@@ -61,6 +85,37 @@ export default async function LinhaDetailPage({ params }: Props) {
          destino_nome: dBase ? `${dBase.nome} (${dBase.cidade})` : 'Destino'
       };
   }).sort((a, b) => a.valor - b.valor);
+
+  const paradasVolta: LinhaParadaComDetalhes[] = linhaVolta
+    ? linhaVolta.paradas
+        .map((lp) => {
+          const pBase = db.paradas.find((p) => p.id === lp.parada_id);
+          return {
+            ...lp,
+            parada_nome: pBase?.nome || 'Desconhecida',
+            parada_cidade: pBase?.cidade || 'Local não mapeado',
+          };
+        })
+        .sort((a, b) => a.ordem - b.ordem)
+    : [];
+
+  const horariosVolta = linhaVolta
+    ? [...linhaVolta.horarios].sort((a, b) => a.hora_saida.localeCompare(b.hora_saida))
+    : [];
+
+  const tarifasVolta: TarifaComDetalhes[] = linhaVolta
+    ? linhaVolta.tarifas
+        .map((t) => {
+          const oBase = db.paradas.find((p) => p.id === t.origem_id);
+          const dBase = db.paradas.find((p) => p.id === t.destino_id);
+          return {
+            ...t,
+            origem_nome: oBase ? `${oBase.nome} (${oBase.cidade})` : 'Origem',
+            destino_nome: dBase ? `${dBase.nome} (${dBase.cidade})` : 'Destino',
+          };
+        })
+        .sort((a, b) => a.valor - b.valor)
+    : [];
 
   return (
     <>
@@ -89,6 +144,10 @@ export default async function LinhaDetailPage({ params }: Props) {
         paradas={paradas}
         horarios={horarios}
         tarifas={tarifas}
+        linhaVolta={linhaVolta}
+        paradasVolta={paradasVolta}
+        horariosVolta={horariosVolta}
+        tarifasVolta={tarifasVolta}
       />
 
       <Footer />

@@ -2,6 +2,7 @@ import Header from '@/components/public/Header';
 import Footer from '@/components/public/Footer';
 import ScheduleSearch from '@/components/public/ScheduleSearch';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Buscar Horários | Porto de Registro',
@@ -25,6 +26,11 @@ export default function HorariosPage() {
               <span className="badge badge--dourado">Direto + Conexao</span>
               <span className="badge badge--verde">Filtro por dia</span>
               <span className="badge badge--cinza">Resultados por horario real</span>
+            </div>
+            <div className="horarios-hero__actions">
+              <Link href="/rodoviarias" className="btn btn--secondary btn--sm">
+                Ver rodoviarias e contatos
+              </Link>
             </div>
           </div>
 
