@@ -13,6 +13,19 @@ interface Parada {
 
 const SEARCH_STATE_STORAGE_KEY = 'porto-search-state-v1';
 const STATIC_EXPORT_MODE = process.env.NEXT_PUBLIC_STATIC_EXPORT === 'true';
+const ENV_BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
+function getRuntimeBasePath(): string {
+  if (ENV_BASE_PATH) return ENV_BASE_PATH;
+  if (typeof window === 'undefined') return '';
+
+  if (window.location.hostname.endsWith('github.io')) {
+    const firstSegment = window.location.pathname.split('/').filter(Boolean)[0];
+    return firstSegment ? `/${firstSegment}` : '';
+  }
+
+  return '';
+}
 
 function toMin(hhmm: string): number {
   const [hh, mm] = hhmm.split(':').map(Number);
@@ -119,7 +132,8 @@ export default function ScheduleSearch() {
 
   useEffect(() => {
     if (STATIC_EXPORT_MODE) {
-      fetch('/data.json')
+      const basePath = getRuntimeBasePath();
+      fetch(`${basePath}/data.json`)
         .then((res) => res.json())
         .then((db: Database) => {
           setDbStatic(db);
