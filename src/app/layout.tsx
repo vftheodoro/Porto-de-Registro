@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { withBasePath } from "@/lib/asset-path";
 
 export const metadata: Metadata = {
   title: "Porto de Registro | Horários de Ônibus — Vale do Ribeira",
@@ -28,7 +29,7 @@ export default function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#1a5c2a" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href={withBasePath('/favicon.ico')} />
       </head>
       <body>{children}</body>
     </html>

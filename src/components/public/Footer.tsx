@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Smartphone, MapPin, Instagram } from 'lucide-react';
+import { withBasePath } from '@/lib/asset-path';
 
 export default function Footer() {
   return (
@@ -10,7 +11,7 @@ export default function Footer() {
           <div>
             <div className="footer__brand footer__brand--spaced">
               <Image 
-                src="/images/logos/logo_porto_branca.png" 
+                src={withBasePath('/images/logos/logo_porto_branca.png')} 
                 alt="Porto de Registro" 
                 width={60} 
                 height={60} 
@@ -28,7 +29,7 @@ export default function Footer() {
                </div>
                <a href="https://www.rapidoperus.com.br/" target="_blank" rel="noopener noreferrer" className="footer__company-link">
                  <Image 
-                   src="/images/logos/logo_rapido_perus.png" 
+                   src={withBasePath('/images/logos/logo_rapido_perus.png')} 
                    alt="Grupo Rápido Perus" 
                    width={120} 
                    height={30} 

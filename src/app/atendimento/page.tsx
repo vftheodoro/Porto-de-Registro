@@ -3,6 +3,7 @@ import Footer from '@/components/public/Footer';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
+import { withBasePath } from '@/lib/asset-path';
 import {
   CreditCard,
   ShieldCheck,
@@ -62,7 +63,7 @@ export default async function AtendimentoPage() {
                 <div className="atendimento-card-3d" aria-hidden="true">
                   <div className="atendimento-card-3d__face atendimento-card-3d__face--front">
                     <Image
-                      src="/images/cartao_onibus_frente.png"
+                      src={withBasePath('/images/cartao_onibus_frente.png')}
                       alt="Porto card frente"
                       width={360}
                       height={220}
@@ -72,7 +73,7 @@ export default async function AtendimentoPage() {
                   </div>
                   <div className="atendimento-card-3d__face atendimento-card-3d__face--back">
                     <Image
-                      src="/images/cartao_onibus_verso_informacoes_passageiro.png"
+                      src={withBasePath('/images/cartao_onibus_verso_informacoes_passageiro.png')}
                       alt="Porto card verso"
                       width={360}
                       height={220}

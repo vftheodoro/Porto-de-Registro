@@ -6,6 +6,7 @@ import { classificarAvisosPublicos } from '@/lib/avisos-publicos';
 import type { Aviso, LinhaCompleta } from '@/types';
 import Link from 'next/link';
 import Image from 'next/image';
+import { withBasePath } from '@/lib/asset-path';
 import {
   MapPin,
   Map,
@@ -138,7 +139,7 @@ export default async function HomePage() {
             <div className="frota-card">
               <div className="frota-card__img">
                 <Image
-                  src="/images/onibus/onibus1.png"
+                  src={withBasePath('/images/onibus/onibus1.png')}
                   alt="Ônibus Porto de Registro - Marcopolo Torino branco"
                   width={560}
                   height={320}
@@ -153,7 +154,7 @@ export default async function HomePage() {
             <div className="frota-card">
               <div className="frota-card__img">
                 <Image
-                  src="/images/onibus/onibus2.png"
+                  src={withBasePath('/images/onibus/onibus2.png')}
                   alt="Ônibus Porto de Registro - Neobus verde"
                   width={560}
                   height={320}

@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ShieldCheck, Clock, Smartphone, MapPin, Instagram, Phone, Globe, CalendarDays, BusFront, AlertTriangle } from 'lucide-react';
+import { withBasePath } from '@/lib/asset-path';
 
 export const metadata: Metadata = {
   title: 'Sobre a Empresa | Porto de Registro',
@@ -105,7 +106,7 @@ export default function SobrePage() {
               </p>
             </div>
             <div className="sobre-group-banner__logo-wrap">
-              <Image src="/images/logos/logo_rapido_perus.png" alt="Rápido Perus" width={160} height={50} className="sobre-group-banner__logo" />
+              <Image src={withBasePath('/images/logos/logo_rapido_perus.png')} alt="Rápido Perus" width={160} height={50} className="sobre-group-banner__logo" />
             </div>
           </div>
 

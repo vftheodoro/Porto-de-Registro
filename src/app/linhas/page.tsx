@@ -9,6 +9,7 @@ import type { Metadata } from 'next';
 import { MapPin, BusFront, CalendarDays, Route } from 'lucide-react';
 import Image from 'next/image';
 import { getBrasaoMunicipio } from '@/lib/municipios';
+import { withBasePath } from '@/lib/asset-path';
 
 export const metadata: Metadata = {
   title: 'Linhas de Ônibus | Porto de Registro',
@@ -120,7 +121,7 @@ export default async function LinhasPage() {
                   <div className="route-card__municipio-item">
                     {linha.brasaoOrigem ? (
                       <Image
-                        src={linha.brasaoOrigem}
+                        src={withBasePath(linha.brasaoOrigem)}
                         alt={`Brasão de ${linha.origemCidade}`}
                         width={28}
                         height={28}
@@ -135,7 +136,7 @@ export default async function LinhasPage() {
                   <div className="route-card__municipio-item">
                     {linha.brasaoDestino ? (
                       <Image
-                        src={linha.brasaoDestino}
+                        src={withBasePath(linha.brasaoDestino)}
                         alt={`Brasão de ${linha.destinoCidade}`}
                         width={28}
                         height={28}

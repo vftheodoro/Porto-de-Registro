@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 import Image from 'next/image';
+import { withBasePath } from '@/lib/asset-path';
 
 export default function Header() {
   const pathname = usePathname();
@@ -24,7 +25,7 @@ export default function Header() {
       <div className="header__inner">
         <Link href="/" className="header__logo" aria-label="Porto de Registro - Página inicial">
           <Image
-            src="/images/logos/logo_porto_branca.png"
+            src={withBasePath('/images/logos/logo_porto_branca.png')}
             alt="Símbolo Porto de Registro"
             width={42}
             height={42}
@@ -32,7 +33,7 @@ export default function Header() {
             priority
           />
             <Image
-              src="/images/logos/logo_escrita_branca_pr.png"
+              src={withBasePath('/images/logos/logo_escrita_branca_pr.png')}
               alt="Porto de Registro"
               width={86}
               height={22}
