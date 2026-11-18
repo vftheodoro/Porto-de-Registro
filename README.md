@@ -4,7 +4,7 @@ Aplicacao web institucional e operacional da Porto de Registro para consulta de 
 
 ## Analise Atual do Site
 
-Status geral: estavel e funcional, com boa cobertura de fluxos publicos e painel admin operando com autenticacao por cookie assinado.
+Escopo documentado: aplicação com consulta pública de itinerários e manutenção administrativa de dados. O comportamento e a segurança em produção precisam de validação contínua.
 
 Pontos fortes:
 - Busca inteligente com rotas diretas e conexoes.
@@ -17,7 +17,7 @@ Pontos fortes:
 Pontos de atencao:
 - Tentativa de login admin sem limite de taxa (rate-limit).
 - Comparacao de senha admin direta (sem hash e sem tempo constante).
-- Middleware do Next com aviso de deprecacao para migracao futura para `proxy`.
+- O controle de acesso administrativo já está implementado em `src/proxy.ts`; manter testes de autorização e sessões ao evoluir o projeto.
 - Em producao (Vercel), gravacao local de arquivo nao e permitida e depende de fluxo manual de download/commit do JSON.
 
 ## Stack Tecnica
@@ -90,7 +90,7 @@ APIs:
 - `POST /api/admin/data`
 
 Seguranca atual:
-- Middleware protege `/admin/:path*` (exceto login).
+- `src/proxy.ts` protege `/admin/:path*` (exceto login).
 - Sessao por cookie `HttpOnly` assinado com HMAC (`ADMIN_SECRET`).
 
 Observacao operacional:
@@ -163,3 +163,15 @@ Observacao importante: como a escrita em arquivo local nao funciona em runtime s
 Foi gerado o arquivo detalhado em texto na raiz:
 
 - `DOCUMENTACAO_COMPLETA.txt`
+
+
+## Engenharia e limites da solução
+
+- **Planejamento de viagens:** `src/lib/route-planner.ts` e `src/lib/public-search.ts` calculam opções com base nos horários cadastrados. O sistema **não comprova rastreamento GPS de veículos em tempo real**.
+- **Qualidade:** os testes em `test/` cobrem busca, destinos, dados e regras de validação; execute `npm run test` e `npm run build` antes de publicar mudanças.
+- **Dados:** `data.json` é versionado. No ambiente serverless, as atualizações administrativas exigem persistência externa ou exportação do JSON e commit posterior, conforme o fluxo já documentado.
+- **Segurança:** o acesso administrativo exige revisão específica de proteção contra força bruta e tratamento da senha antes da utilização operacional em produção. A existência de autenticação por cookie não equivale a uma auditoria de segurança.
+
+### Para avaliação técnica
+
+O código demonstra construção de APIs, processamento de horários, modelagem de dados operacionais, geração de PDFs, validação e interface administrativa em Next.js/TypeScript. Consulte também [`DOCUMENTACAO_COMPLETA.txt`](DOCUMENTACAO_COMPLETA.txt) para detalhes adicionais.
